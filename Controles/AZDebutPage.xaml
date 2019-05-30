@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Controles.AZDebutPage">
+    <ContentPage.Content>
+        <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" x:Name="grlogin">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"></ColumnDefinition>
+                <ColumnDefinition Width="200"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Provence Mistral" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
+            <Label Grid.Row="1" Grid.Column="0" Text="Nom"></Label>
+            <!--AZComboCS Grid.Row="1" Grid.Column="1" x:Name="cboid_prs" ItemsSource="{Binding ListePrs}" DisplayMemberPath="lib" SelectedValuePath="id"></AZComboCS-->
+            <Label Grid.Row="2" Grid.Column="0" Text="Mot de passe"></Label>
+            <Entry Grid.Row="2" Grid.Column="1" x:Name="txtpwd_usr" IsPassword="True"></Entry>
+            <Button Grid.Row="3" Grid.Column="0" x:Name="btnok" Text="OK" Clicked="btnok_Clicked"></Button>
+            <Button Grid.Row="3" Grid.Column="1" x:Name="btncancel" Text="Cancel" Clicked="btncancel_Clicked"></Button>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

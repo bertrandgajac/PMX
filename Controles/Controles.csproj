@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="4.0.0.425677" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AccesBdClient\AccesBdClient.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="AZDebutPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="AZEcranComplexe.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="AZReqPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="AZVoirImagePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+
+</Project>

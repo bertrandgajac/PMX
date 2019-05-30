@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PMX.MenuPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Button x:Name="btn_login" Clicked="btn_login_Clicked" Text="Connexion"></Button>
+            <Button x:Name="btn_loges" Clicked="btn_loges_Clicked" Text="Loges" IsEnabled="False"></Button>
+            <Button x:Name="btn_prs" Clicked="btn_prs_Clicked" Text="Membres" IsEnabled="False"></Button>
+            <Button x:Name="btn_req" Clicked="btn_req_Clicked" Text="Requeteur" IsEnabled="False"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
