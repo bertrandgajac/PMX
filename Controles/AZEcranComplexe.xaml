@@ -29,7 +29,7 @@
                 <Setter Property="VerticalOptions" Value="Center"></Setter>
             </Style>
             <Style x:Key="ListViewStyle" TargetType="ListView">
-                <Setter Property="RowHeight" Value="50"></Setter>
+                <!--Setter Property="RowHeight" Value="50"></Setter-->
                 <Setter Property="SeparatorVisibility" Value="Default"></Setter>
                 <Setter Property="SeparatorColor" Value="Black"></Setter>
             </Style>

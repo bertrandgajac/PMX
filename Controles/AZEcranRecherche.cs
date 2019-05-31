@@ -66,7 +66,7 @@ namespace Controles
             int? nb_crit = await ab.LireEntier(sql);
             if (nb_crit.Value > 0)
             {
-                sql = "select c.id_AZtype_champ,c.entete,c.nom_champ,c.lg_champ,c.lg_champ_ecr,c.maj,c.visible,c.dans_grille,c.cbo_nom_tab_ref,c.cbo_req,c.cbo_filtre_lib,c.cbo_filtre_id,cc.clause_sql from AZchamp_crit cc inner join AZchamp c on cc.id_AZchamp=c.id_AZchamp where cc.id_AZecr=" + Formater(m_id_AZecr) + " order by cc.num_champ";
+                sql = "select c.id_AZtype_champ,c.entete,c.nom_champ,c.lg_champ,c.lg_champ_ecr,c.maj,c.oblig,c.visible,c.dans_grille,c.cbo_nom_tab_ref,c.cbo_req,c.cbo_filtre_lib,c.cbo_filtre_id,cc.clause_sql from AZchamp_crit cc inner join AZchamp c on cc.id_AZchamp=c.id_AZchamp where cc.id_AZecr=" + Formater(m_id_AZecr) + " order by cc.num_champ";
                 DataTable dt_champs_crit = await ab.LireTable(sql);
                 foreach (DataRow dr in dt_champs_crit.Rows)
                 {
@@ -76,13 +76,14 @@ namespace Controles
                     int lg_champ = Convert.ToInt32(dr["lg_champ"].ToString());
                     int lg_champ_ecr = Convert.ToInt32(dr["lg_champ_ecr"].ToString());
                     bool maj_champ = Convert.ToBoolean(dr["maj"].ToString());
+                    bool oblig = Convert.ToBoolean(dr["oblig"].ToString());
                     bool visible = Convert.ToBoolean(dr["visible"].ToString());
                     string cbo_nom_tab_ref = dr["cbo_nom_tab_ref"].ToString();
                     string cbo_req = dr["cbo_req"].ToString();
                     string cbo_filtre_lib = dr["cbo_filtre_lib"].ToString();
                     string cbo_filtre_id = dr["cbo_filtre_id"].ToString();
                     string clause_sql = dr["clause_sql"].ToString();
-                    AZChamp ch = new AZChamp(tc, entete, nom_champ, lg_champ, lg_champ_ecr, cbo_nom_tab_ref, cbo_req, cbo_filtre_id, cbo_filtre_lib, maj_champ, visible);
+                    AZChamp ch = new AZChamp(tc, entete, nom_champ, lg_champ, lg_champ_ecr, cbo_nom_tab_ref, cbo_req, cbo_filtre_id, cbo_filtre_lib, maj_champ, oblig, visible);
                     //                    lcr.Add(ch);
                     m_criteres_recherche.lc.Add(ch);
                     AZChampCritere chc = new AZChampCritere(tc, entete, nom_champ, lg_champ, lg_champ_ecr, cbo_nom_tab_ref, cbo_req, cbo_filtre_id, cbo_filtre_lib, maj_champ, visible, clause_sql);
@@ -376,6 +377,7 @@ namespace Controles
                     sql += "," + Formater(c.lg_champ);
                     sql += "," + Formater(c.lg_champ_ecran);
                     sql += "," + Formater(c.maj);
+                    sql += "," + Formater(c.oblig);
                     sql += "," + Formater(c.visible);
                     sql += "," + Formater(c.nom_tab_ref_pour_cbo);
                     sql += "," + Formater(c.base_req);
@@ -413,6 +415,7 @@ namespace Controles
                     sql += "," + Formater(c.lg_champ);
                     sql += "," + Formater(c.lg_champ_ecran);
                     sql += "," + Formater(c.maj);
+                    sql += "," + Formater(c.oblig);
                     sql += "," + Formater(c.visible);
                     sql += "," + Formater(c.nom_tab_ref_pour_cbo);
                     sql += "," + Formater(c.base_req);

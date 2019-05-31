@@ -432,7 +432,8 @@ namespace Controles
                                 if (nom_col == "Mode" || nom_col == "etat" || nom_col == "User" || nom_col.EndsWith("WITH") || tc == AZTypeDeChamp.ClePrimaire || tc == AZTypeDeChamp.ClePrimairePrincipale || nom_col == nb_ligs || nom_col == "SelectId")
                                     visible = false;
                                 //                                AZChamp c = new AZChamp(tc, desc_col, nom_col, lg_col, largeur_ecran, nom_tab, nom_tab_ref_pour_cbo, maj, visible, dans_grille);
-                                AZChamp c = new AZChamp(tc, desc_col, nom_col, lg_col, largeur_ecran, nom_tab_ref_pour_cbo, base_req, base_filtre_id, base_filtre_lib, maj, visible);
+                                bool oblig = col.AllowDBNull;
+                                AZChamp c = new AZChamp(tc, desc_col, nom_col, lg_col, largeur_ecran, nom_tab_ref_pour_cbo, base_req, base_filtre_id, base_filtre_lib, maj, oblig, visible);
                                 lc.Add(c);
                             }
                         }
@@ -479,7 +480,14 @@ namespace Controles
                     gr.Children.Add(bv);
                     num_col++;
                 }
-//                bool debut = true;
+                //                bool debut = true;
+                int dernier_champ_visible = 0;
+                for(int index_champ=0;index_champ<lc.Count;index_champ++)
+                {
+                    AZChamp c = lc[index_champ];
+                    if (c.visible)
+                        dernier_champ_visible = index_champ;
+                }
                 for (int index_champ = 0; index_champ < lc.Count; index_champ++)
                 {
                     AZChamp c = lc[index_champ];
@@ -539,7 +547,12 @@ namespace Controles
                         */
                         int lg_col = c.lg_champ_ecran;
                         if (m_avec_grid_splitter)
-                            lg_col += m_largeur_grid_splitter + (int)gr.ColumnSpacing;
+                        {
+                            int delta_lg= m_largeur_grid_splitter + (int)gr.ColumnSpacing;
+                            if (index_champ == dernier_champ_visible)
+                                delta_lg += m_largeur_grid_splitter;
+                            lg_col += delta_lg;
+                        }
                         gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(lg_col, GridUnitType.Absolute) });
                         /*
                         bool modif = c.maj;
@@ -549,6 +562,16 @@ namespace Controles
                             modif = false;
                         */
                         bool modif = prefixe == "rech" ? false : c.maj;
+                        bool colorer = false;
+                        Color coul_fond = Color.White;
+                        if(prefixe!="rech" && prefixe!="crit")
+                        {
+                            colorer = true;
+                            if (modif == false)
+                                coul_fond = Color.LightGray;
+                            else if (c.oblig)
+                                coul_fond = Color.LemonChiffon;
+                        }
                         switch (c.type)
                         {
                             case AZTypeDeChamp.Blob:
@@ -566,6 +589,8 @@ namespace Controles
                                 sw.Toggled += SwToggled;
                                 sw.ClassId = prefixe + c.NomChampBD();
                                 sw.IsEnabled = modif;
+                                if(colorer)
+                                    sw.BackgroundColor = coul_fond;
                                 gr.Children.Add(sw);
                                 num_col++;
                                 break;
@@ -591,6 +616,8 @@ namespace Controles
                                         lbl.Text = "Manque le champ WITH";
                                     }
                                     lbl.ClassId = prefixe + c.NomChampBD();
+                                    if(colorer)
+                                        lbl.BackgroundColor = coul_fond;
                                     gr.Children.Add(lbl);
                                 }
                                 else
@@ -616,6 +643,8 @@ namespace Controles
                                     cbo.base_req = c.base_req;
                                     cbo.base_filtre_lib = c.base_filtre_lib;
                                     cbo.base_filtre_id = c.base_filtre_id;
+                                    if(colorer)
+                                        cbo.BackgroundColor = coul_fond;
                                     gr.Children.Add(cbo);
                                 }
                                 num_col++;
@@ -628,6 +657,8 @@ namespace Controles
                                 dp.DateSelected += DateSelected;
                                 dp.ClassId = prefixe + c.NomChampBD();
                                 dp.IsEnabled = modif;
+                                if(colorer)
+                                    dp.BackgroundColor = coul_fond;
                                 gr.Children.Add(dp);
                                 num_col++;
                                 break;
@@ -641,6 +672,8 @@ namespace Controles
                                     Grid.SetColumn(lbl, num_col);
                                     lbl.SetBinding(Label.TextProperty, new Binding("ItemArray[" + num_champ.ToString() + "]"));
                                     lbl.ClassId = prefixe + c.NomChampBD();
+                                    if(colorer)
+                                        lbl.BackgroundColor = coul_fond;
                                     gr.Children.Add(lbl);
                                 }
                                 else
@@ -651,6 +684,8 @@ namespace Controles
                                     en.SetBinding(Entry.TextProperty, new Binding("ItemArray[" + num_champ.ToString() + "]"));
                                     en.TextChanged += TextChanged;
                                     en.ClassId = prefixe + c.NomChampBD();
+                                    if (colorer)
+                                        en.BackgroundColor = coul_fond;
                                     gr.Children.Add(en);
                                 }
                                 num_col++;
@@ -735,26 +770,24 @@ namespace Controles
             gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(0.5, GridUnitType.Star) });
             gr.Padding = 0.0;
             gr.ColumnSpacing = 0.0;
-            Grid.SetColumn(gr, num_col);
-            Grid.SetRow(gr, 0);
             Button btnmoins = new Button();
             btnmoins.Text = "-";
             btnmoins.BackgroundColor = Color.LightGreen;
             string classid = num_col.ToString() + "," + num_champ.ToString();
             btnmoins.ClassId = classid;
-            btnmoins.HeightRequest = 30;
+//            btnmoins.HeightRequest = 30;
             //            btnmoins.WidthRequest = c.largeur_champ_ecran / 2;
             btnmoins.Clicked += BtnMoinsClicked;
+            Grid.SetColumn(btnmoins, 0);
+            gr.Children.Add(btnmoins);
             Button btnplus = new Button();
             btnplus.Text = "+";
             btnplus.BackgroundColor = Color.LightPink;
             btnplus.ClassId = classid;
-            btnplus.HeightRequest = 30;
+//            btnplus.HeightRequest = 30;
             //            btnplus.WidthRequest = c.largeur_champ_ecran / 2;
             btnplus.Clicked += BtnPlusClicked;
-            Grid.SetColumn(btnmoins, 0);
             Grid.SetColumn(btnplus, 1);
-            gr.Children.Add(btnmoins);
             gr.Children.Add(btnplus);
             return gr;
         }
@@ -916,7 +949,7 @@ namespace Controles
             {
                 Button btn = (Button)sender;
                 int delta_vers_la_gauche = -10;
-                DeplacerFrontiereVerticale(btn.ClassId, delta_vers_la_gauche, false);
+                DeplacerFrontiereVerticale(btn.ClassId, delta_vers_la_gauche, true);
             }
             catch (Exception ex)
             {
@@ -929,7 +962,7 @@ namespace Controles
             {
                 Button btn = (Button)sender;
                 int delta_vers_la_droite = 10;
-                DeplacerFrontiereVerticale(btn.ClassId, delta_vers_la_droite, false);
+                DeplacerFrontiereVerticale(btn.ClassId, delta_vers_la_droite, true);
             }
             catch (Exception ex)
             {
@@ -1052,8 +1085,17 @@ namespace Controles
                         grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(10, GridUnitType.Absolute) });
                         num_col = 1;
                     }
-//                    bool debut = true;
-//                    AZChamp champ_precedent = null;
+                    //                    bool debut = true;
+                    //                    AZChamp champ_precedent = null;
+                    int dernier_champ_visible = 0;
+                    for (int i = 0; i < lc.Count; i++)
+                    {
+                        AZChamp c = lc[i];
+                        if (c.visible)
+                        {
+                            dernier_champ_visible = i;
+                        }
+                    }
                     for (int i = 0; i < lc.Count; i++)
                     {
                         AZChamp c = lc[i];
@@ -1087,9 +1129,11 @@ namespace Controles
                             if (m_avec_grid_splitter == false)
                             {
                                 Grid grbtn = CreerGrilleRedimensionnement(num_col, i);
+                                Grid.SetColumn(grbtn, num_col);
+                                Grid.SetRow(grbtn, 0);
                                 grg.Children.Add(grbtn);
                             }
-                            else
+                            else if (i < dernier_champ_visible)
                             {
                                 grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(m_largeur_grid_splitter, GridUnitType.Absolute) });
                                 AZGridSplitter grspl = new AZGridSplitter() { BackgroundColor = Color.Orange, HorizontalOptions = LayoutOptions.Center };
@@ -1100,6 +1144,28 @@ namespace Controles
                                 Grid.SetRow(grspl, 1);
                                 grg.Children.Add(grspl);
                             }
+                            else
+                            {
+                                /*
+                                grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(m_largeur_grid_splitter, GridUnitType.Absolute) });
+                                Button btnmoins = new Button() { BackgroundColor = Color.Olive };
+                                btnmoins.ClassId = (num_col).ToString() + "," + i.ToString();
+                                Grid.SetColumn(btnmoins, ++num_col);
+                                Grid.SetRow(btnmoins, 1);
+                                grg.Children.Add(btnmoins);
+                                grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(m_largeur_grid_splitter, GridUnitType.Absolute) });
+                                Button btnplus = new Button() { BackgroundColor = Color.Red };
+                                btnplus.ClassId = (num_col).ToString() + "," + i.ToString();
+                                Grid.SetColumn(btnplus, ++num_col);
+                                Grid.SetRow(btnplus, 1);
+                                grg.Children.Add(btnplus);
+                                */
+                                grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(m_largeur_grid_splitter * 2, GridUnitType.Absolute) });
+                                Grid grbtn = CreerGrilleRedimensionnement(num_col++, i);
+                                Grid.SetColumn(grbtn, num_col);
+                                Grid.SetRow(grbtn, 1);
+                                grg.Children.Add(grbtn);
+                            }
                             num_col++;
 //                            debut = false;
 //                            champ_precedent = c;
@@ -1108,12 +1174,13 @@ namespace Controles
                     //                        sl.Children.Add(gr);
                     sv.Content = grg;
                     dg = new ListView();
+                    dg.HasUnevenRows = true;
                     Grid.SetColumn(dg, 0);
                     Grid.SetColumnSpan(dg, num_col);
                     int num_row = _type_bloc_donnees == AZTypeBlocDonnees.CriteresRecherche ? 3 : 2;
                     Grid.SetRow(dg, num_row);
                     dg.Margin = 0.0;
-                    dg.RowHeight = 40;
+//                    dg.RowHeight = 40;
                     //20190515                    onglet_actif = o.NomOnglet
                     if (_type_bloc_donnees == AZTypeBlocDonnees.CriteresRecherche)
                         dg.ItemTemplate = new DataTemplate(CreerItemTemplateRecherche);

@@ -21,18 +21,19 @@ namespace PMX.Droid.Renderers
         {
             switch (e.Action)
             {
-                case (int)MotionEventActions.Down:
-                    {
-                        _lastPoint = new Point(e.RawX, e.RawY);
-                        break;
-                    }
+                case MotionEventActions.Down:
+                    _lastPoint = new Point(e.RawX, e.RawY);
+                    Element.DebutMouvement();
+                    break;
                 case MotionEventActions.Move:
-                    {
-                        //                        Element.UpdateGrid(Context.FromPixels(e.RawX - _lastPoint.X), Context.FromPixels(e.RawY - _lastPoint.Y));
-                        Element.UpdateGrid(e.RawX - _lastPoint.X, e.RawY - _lastPoint.Y);
-                        _lastPoint = new Point(e.RawX, e.RawY);
-                        break;
-                    }
+                    //                        Element.UpdateGrid(Context.FromPixels(e.RawX - _lastPoint.X), Context.FromPixels(e.RawY - _lastPoint.Y));
+                    Element.Mouvement(e.RawX - _lastPoint.X, e.RawY - _lastPoint.Y);
+                    _lastPoint = new Point(e.RawX, e.RawY);
+                    break;
+                case MotionEventActions.ButtonRelease:
+                case MotionEventActions.Up:
+                    Element.FinMouvement();
+                    break;
             }
             return true;
         }

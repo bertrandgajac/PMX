@@ -20,10 +20,11 @@ namespace Controles
         protected string _base_filtre_lib;
         protected bool _maj;
         protected bool _visible;
+        protected bool _oblig;
         //        public Label lbl;
         public View champ_saisie;
 
-        public AZChamp(AZTypeDeChamp type, string header, string nom_champ, int lg_champ, int lg_champ_ecran, string nom_tab_ref_pour_cbo, string base_req, string base_filtre_id, string base_filtre_lib, bool maj, bool visible)
+        public AZChamp(AZTypeDeChamp type, string header, string nom_champ, int lg_champ, int lg_champ_ecran, string nom_tab_ref_pour_cbo, string base_req, string base_filtre_id, string base_filtre_lib, bool maj, bool oblig, bool visible)
         {
             _type = type;
             _header = header;
@@ -35,6 +36,7 @@ namespace Controles
             _base_filtre_lib = base_filtre_lib;
             _base_filtre_id = base_filtre_id;
             _maj = maj;
+            _oblig = oblig;
             _visible = visible;
         }
         public AZTypeDeChamp type { get { return _type; } set { _type = value; } }
@@ -44,6 +46,7 @@ namespace Controles
         public int lg_champ_ecran { get { return _lg_champ_ecran; } set { _lg_champ_ecran = value; } }
         public string nom_tab_ref_pour_cbo { get { return _nom_tab_ref_pour_cbo; } set { _nom_tab_ref_pour_cbo = value; } }
         public bool maj { get { return _maj; } set { _maj = value; } }
+        public bool oblig { get { return _oblig; } set { _oblig = value; } }
         public bool visible { get { return _visible; } set { _visible = value; } }
         public string base_req { get { return _base_req; } set { _base_req = value; } }
         public string base_filtre_id { get { return _base_filtre_id; } set { _base_filtre_id = value; } }
@@ -52,6 +55,7 @@ namespace Controles
         {
             return "lbl" + nom_champ;
         }
+        /*
         public virtual string NomChampIHM()
         {
             string nom = nom_champ;
@@ -85,12 +89,11 @@ namespace Controles
             }
             return nom;
         }
-
+        */
         public virtual string NomChampBD()
         {
             return nom_champ;
         }
-
         public Type TypeCsharp()
         {
             Type t = null;
@@ -124,7 +127,7 @@ namespace Controles
             }
             return t;
         }
-
+        /*
         public virtual string NomFctChangement()
         {
             string t = null;
@@ -153,7 +156,6 @@ namespace Controles
             }
             return t;
         }
-
         public string NomFctChangementBis()
         {
             string t = null;
@@ -165,13 +167,14 @@ namespace Controles
             }
             return t;
         }
+        */
     }
 
     public class AZChampCritere : AZChamp
     {
         private string _clause_sql;
 
-        public AZChampCritere(AZTypeDeChamp type, string header, string nom_champ, int lg_champ, int largeur_champ_ecran, string nom_tab_ref_pour_cbo, string base_req, string base_filtre_id, string base_filtre_lib, bool maj, bool visible, string clause_sql) : base(type, header, nom_champ, lg_champ, largeur_champ_ecran, nom_tab_ref_pour_cbo, base_req, base_filtre_id, base_filtre_lib, maj, visible)
+        public AZChampCritere(AZTypeDeChamp type, string header, string nom_champ, int lg_champ, int largeur_champ_ecran, string nom_tab_ref_pour_cbo, string base_req, string base_filtre_id, string base_filtre_lib, bool maj, bool visible, string clause_sql) : base(type, header, nom_champ, lg_champ, largeur_champ_ecran, nom_tab_ref_pour_cbo, base_req, base_filtre_id, base_filtre_lib, maj, false, visible)
         {
             /*
             _type = type;
@@ -192,4 +195,3 @@ namespace Controles
         public string clause_sql { get { return _clause_sql; } set { _clause_sql = value; } }
     }
 }
-

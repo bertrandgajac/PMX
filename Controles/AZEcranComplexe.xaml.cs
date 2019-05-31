@@ -70,7 +70,7 @@ namespace Controles
                     o.entete = entete;
                     req_lire = dt_AZonglet.Rows[0]["req_lire"].ToString();
                     req_maj = dt_AZonglet.Rows[0]["req_maj"].ToString();
-                    sql = "select c.id_AZtype_champ,c.entete,c.nom_champ,c.lg_champ,c.lg_champ_ecr,c.maj,c.visible,c.cbo_nom_tab_ref,c.cbo_req,c.cbo_filtre_lib,c.cbo_filtre_id from AZchamp_onglet co inner join AZchamp c on co.id_AZchamp=c.id_AZchamp where co.id_AZonglet=" + Formater(id_AZonglet) + " order by co.num_champ";
+                    sql = "select c.id_AZtype_champ,c.entete,c.nom_champ,c.lg_champ,c.lg_champ_ecr,c.maj,c.oblig,c.visible,c.cbo_nom_tab_ref,c.cbo_req,c.cbo_filtre_lib,c.cbo_filtre_id from AZchamp_onglet co inner join AZchamp c on co.id_AZchamp=c.id_AZchamp where co.id_AZonglet=" + Formater(id_AZonglet) + " order by co.num_champ";
                     DataTable dt_champs = await ab.LireTable(sql);
                     foreach (DataRow dr in dt_champs.Rows)
                     {
@@ -84,12 +84,13 @@ namespace Controles
                         int lg_champ = Convert.ToInt32(dr["lg_champ"].ToString());
                         int lg_champ_ecr = Convert.ToInt32(dr["lg_champ_ecr"].ToString());
                         bool maj_champ = Convert.ToBoolean(dr["maj"].ToString());
+                        bool oblig = Convert.ToBoolean(dr["oblig"].ToString());
                         bool visible = Convert.ToBoolean(dr["visible"].ToString());
                         string cbo_nom_tab_ref = dr["cbo_nom_tab_ref"].ToString();
                         string cbo_req = dr["cbo_req"].ToString();
                         string cbo_filtre_lib = dr["cbo_filtre_lib"].ToString();
                         string cbo_filtre_id = dr["cbo_filtre_id"].ToString();
-                        AZChamp ch = new AZChamp(tc, entete, nom_champ, lg_champ, lg_champ_ecr, cbo_nom_tab_ref, cbo_req, cbo_filtre_id, cbo_filtre_lib, maj_champ, visible);
+                        AZChamp ch = new AZChamp(tc, entete, nom_champ, lg_champ, lg_champ_ecr, cbo_nom_tab_ref, cbo_req, cbo_filtre_id, cbo_filtre_lib, maj_champ, oblig, visible);
                         o.bd.lc.Add(ch);
                     }
                 }
@@ -589,63 +590,67 @@ namespace Controles
         {
             bool ret = await base.MemoriserDefinitionEcran();
             AccesBdClient.AccesBdClient ab = new AccesBdClient.AccesBdClient();
-            for (int num_onglet = 0; num_onglet < m_onglets.Count; num_onglet++)
+            if (m_onglets != null)
             {
-                AZOnglet o = m_onglets[num_onglet];
-                string sql = "select count(*) from AZonglet where id_AZecr=" + Formater(m_id_AZecr) + " and nom_table=" + Formater(o.bd.nom_table_bloc);
-                int? nb = await ab.LireEntier(sql);
-                if (nb == 0)
+                for (int num_onglet = 0; num_onglet < m_onglets.Count; num_onglet++)
                 {
-                    this.recherche_nb.Text = "onglet: " + o.bd.header;
-                    int id_type_onglet = Convert.ToInt32(o.type_onglet);
-                    sql = "exec AZongletCreer ";
-                    sql += Formater(m_id_AZecr.ToString());
-                    sql += "," + Formater(id_type_onglet);
-                    sql += "," + Formater(num_onglet);
-                    sql += "," + Formater(o.entete);
-                    sql += "," + Formater(o.bd.nom_table_bloc);
-                    sql += "," + Formater(o.bd.req_lire);
-                    sql += "," + Formater(o.bd.req_maj);
-                    sql += "," + Formater(o.bd.proc_maj);
-                }
-                int? id_AZonglet = await ab.LireEntier(sql);
-                for (int num_champ = 0; num_champ < o.bd.lc.Count; num_champ++)
-                {
-                    AZChamp c = o.bd.lc[num_champ];
-                    if (o.bd.header == "cab_lg" && c.header == "date_deroulage")
-                    {
-                        int a = 0;
-                    }
-                    sql = "select count(*) from AZchamp c inner join AZchamp_onglet co on c.id_AZchamp=co.id_AZchamp inner join AZonglet o on co.id_AZonglet=o.id_AZonglet where o.id_AZecr=" + Formater(m_id_AZecr) + " and o.nom_table=" + Formater(o.bd.nom_table_bloc) + " and c.nom_champ=" + Formater(c.NomChampBD());
-                    nb = await ab.LireEntier(sql);
+                    AZOnglet o = m_onglets[num_onglet];
+                    string sql = "select count(*) from AZonglet where id_AZecr=" + Formater(m_id_AZecr) + " and nom_table=" + Formater(o.bd.nom_table_bloc);
+                    int? nb = await ab.LireEntier(sql);
                     if (nb == 0)
                     {
-                        int id_type_champ = Convert.ToInt32(c.type);
-                        sql = "exec AZchampCreer ";
-                        sql += Formater(id_type_champ);
-                        sql += "," + Formater(c.header);
-                        sql += "," + Formater(c.NomChampBD());
-                        sql += "," + Formater(c.lg_champ);
-                        sql += "," + Formater(c.lg_champ_ecran);
-                        sql += "," + Formater(c.maj);
-                        sql += "," + Formater(c.visible);
-                        sql += "," + Formater(c.nom_tab_ref_pour_cbo);
-                        sql += "," + Formater(c.base_req);
-                        sql += "," + Formater(c.base_filtre_lib);
-                        sql += "," + Formater(c.base_filtre_id);
-                        int? id_AZchamp = await ab.LireEntier(sql);
-                        sql = "exec AZchamp_ongletCreer ";
-                        sql += Formater(id_AZonglet.Value);
-                        sql += "," + Formater(num_champ);
-                        sql += "," + Formater(id_AZchamp.Value);
-                        await ab.ExecSql(sql);
+                        this.recherche_nb.Text = "onglet: " + o.bd.header;
+                        int id_type_onglet = Convert.ToInt32(o.type_onglet);
+                        sql = "exec AZongletCreer ";
+                        sql += Formater(m_id_AZecr.ToString());
+                        sql += "," + Formater(id_type_onglet);
+                        sql += "," + Formater(num_onglet);
+                        sql += "," + Formater(o.entete);
+                        sql += "," + Formater(o.bd.nom_table_bloc);
+                        sql += "," + Formater(o.bd.req_lire);
+                        sql += "," + Formater(o.bd.req_maj);
+                        sql += "," + Formater(o.bd.proc_maj);
                     }
-                    else
+                    int? id_AZonglet = await ab.LireEntier(sql);
+                    for (int num_champ = 0; num_champ < o.bd.lc.Count; num_champ++)
                     {
-                        sql = "select c.id_AZchamp from AZchamp c inner join AZchamp_onglet co on c.id_AZchamp=co.id_AZchamp inner join AZonglet o on co.id_AZonglet=o.id_AZonglet where o.id_AZecr=" + Formater(m_id_AZecr) + " and o.nom_table=" + Formater(o.bd.nom_table_bloc) + " and c.nom_champ=" + Formater(c.NomChampBD());
-                        int? id_AZchamp = await ab.LireEntier(sql);
-                        sql = "update AZchamp set lg_champ_ecr=" + Formater(c.lg_champ_ecran) + " where id_AZchamp=" + Formater(id_AZchamp);
-                        await ab.ExecSql(sql);
+                        AZChamp c = o.bd.lc[num_champ];
+                        if (o.bd.header == "cab_lg" && c.header == "date_deroulage")
+                        {
+                            int a = 0;
+                        }
+                        sql = "select count(*) from AZchamp c inner join AZchamp_onglet co on c.id_AZchamp=co.id_AZchamp inner join AZonglet o on co.id_AZonglet=o.id_AZonglet where o.id_AZecr=" + Formater(m_id_AZecr) + " and o.nom_table=" + Formater(o.bd.nom_table_bloc) + " and c.nom_champ=" + Formater(c.NomChampBD());
+                        nb = await ab.LireEntier(sql);
+                        if (nb == 0)
+                        {
+                            int id_type_champ = Convert.ToInt32(c.type);
+                            sql = "exec AZchampCreer ";
+                            sql += Formater(id_type_champ);
+                            sql += "," + Formater(c.header);
+                            sql += "," + Formater(c.NomChampBD());
+                            sql += "," + Formater(c.lg_champ);
+                            sql += "," + Formater(c.lg_champ_ecran);
+                            sql += "," + Formater(c.maj);
+                            sql += "," + Formater(c.oblig);
+                            sql += "," + Formater(c.visible);
+                            sql += "," + Formater(c.nom_tab_ref_pour_cbo);
+                            sql += "," + Formater(c.base_req);
+                            sql += "," + Formater(c.base_filtre_lib);
+                            sql += "," + Formater(c.base_filtre_id);
+                            int? id_AZchamp = await ab.LireEntier(sql);
+                            sql = "exec AZchamp_ongletCreer ";
+                            sql += Formater(id_AZonglet.Value);
+                            sql += "," + Formater(num_champ);
+                            sql += "," + Formater(id_AZchamp.Value);
+                            await ab.ExecSql(sql);
+                        }
+                        else
+                        {
+                            sql = "select c.id_AZchamp from AZchamp c inner join AZchamp_onglet co on c.id_AZchamp=co.id_AZchamp inner join AZonglet o on co.id_AZonglet=o.id_AZonglet where o.id_AZecr=" + Formater(m_id_AZecr) + " and o.nom_table=" + Formater(o.bd.nom_table_bloc) + " and c.nom_champ=" + Formater(c.NomChampBD());
+                            int? id_AZchamp = await ab.LireEntier(sql);
+                            sql = "update AZchamp set lg_champ_ecr=" + Formater(c.lg_champ_ecran) + " where id_AZchamp=" + Formater(id_AZchamp);
+                            await ab.ExecSql(sql);
+                        }
                     }
                 }
             }

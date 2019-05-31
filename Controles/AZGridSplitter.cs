@@ -44,7 +44,22 @@ namespace Controles
             Children.Add(bv3);
             */
         }
-        public void UpdateGrid(double dragOffsetX, double dragOffsetY)
+        public void DebutMouvement()
+        {
+            if (m_bloc != null)
+            {
+                m_bloc.sv.Orientation = ScrollOrientation.Vertical;
+            }
+        }
+        public void FinMouvement()
+        {
+            if (m_bloc != null)
+            {
+                m_bloc.DeplacerFrontiereVerticale(ClassId, 0, true);
+                m_bloc.sv.Orientation = ScrollOrientation.Horizontal;
+            }
+        }
+        public void Mouvement(double dragOffsetX, double dragOffsetY)
         {
             if (m_p != null)
             {
@@ -107,6 +122,7 @@ namespace Controles
             {
                 return;
             }
+            this.AnchorX += offsetX;
             ColumnDefinition columnLeft = grid.ColumnDefinitions[column - 1];
             double actualWidth = GetColumnDefinitionActualWidth(columnLeft) + offsetX;
             if (actualWidth < 0)
@@ -120,6 +136,7 @@ namespace Controles
                 //                m_bloc.lc[num_champ].lg_champ_ecran = (int)(actualWidth + 0.5);
                 int offset = offsetX > 0.0 ? (int)(0.5 + offsetX) : (int)(-0.5 + offsetX);
                 m_bloc.DeplacerFrontiereVerticale(ClassId, offset, false);
+//                m_bloc.sv.Orientation = ScrollOrientation.Horizontal;
             }
         }
         static private double GetRowDefinitionActualHeight(RowDefinition row)
@@ -158,4 +175,3 @@ namespace Controles
         }
     }
 }
-

@@ -20,12 +20,6 @@ namespace PMX
         {
             DebutPage p = new DebutPage();
             await Navigation.PushAsync(p);
-            if(((App)Application.Current).LoginFait())
-            {
-                btn_loges.IsEnabled = true;
-                btn_prs.IsEnabled = true;
-                btn_req.IsEnabled = true;
-            }
         }
         private async void btn_loges_Clicked(object sender, EventArgs e)
         {
@@ -39,6 +33,16 @@ namespace PMX
         private async void btn_req_Clicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new ReqPage());
+        }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            if (((App)Application.Current).LoginFait())
+            {
+                btn_loges.IsEnabled = true;
+                btn_prs.IsEnabled = true;
+                btn_req.IsEnabled = true;
+            }
         }
     }
 }
