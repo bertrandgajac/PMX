@@ -7,6 +7,7 @@ namespace PMX
     public partial class App : Application
     {
         private int m_id_prs = 0;
+        private double m_taille_textes = 15.0;
         public App()
         {
             InitializeComponent();
@@ -20,14 +21,9 @@ namespace PMX
                 m_id_prs = id_prs;
             }
         }
-        public int IdPrsUtilisateur()
-        {
-            return m_id_prs;
-        }
-        public bool LoginFait()
-        {
-            return m_id_prs > 0;
-        }
+        public int IdPrsUtilisateur { get { return m_id_prs; } }
+        public bool LoginFait { get { return m_id_prs > 0; } }
+        public double TailleTextes { get { return m_taille_textes; } }
 
         protected override void OnStart()
         {

@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:controles="clr-namespace:Controles;assembly=Controles"
              x:Class="Controles.AZDebutPage">
     <ContentPage.Content>
-        <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" x:Name="grlogin">
+        <controles:AZGrid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" x:Name="grlogin">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"></RowDefinition>
                 <RowDefinition Height="40"></RowDefinition>
@@ -13,13 +14,13 @@
                 <ColumnDefinition Width="200"></ColumnDefinition>
                 <ColumnDefinition Width="200"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Provence Mistral" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
-            <Label Grid.Row="1" Grid.Column="0" Text="Nom"></Label>
+            <controles:AZLabel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Provence Mistral" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
+            <controles:AZLabel Grid.Row="1" Grid.Column="0" Text="Nom"></controles:AZLabel>
             <!--AZComboCS Grid.Row="1" Grid.Column="1" x:Name="cboid_prs" ItemsSource="{Binding ListePrs}" DisplayMemberPath="lib" SelectedValuePath="id"></AZComboCS-->
-            <Label Grid.Row="2" Grid.Column="0" Text="Mot de passe"></Label>
-            <Entry Grid.Row="2" Grid.Column="1" x:Name="txtpwd_usr" IsPassword="True"></Entry>
-            <Button Grid.Row="3" Grid.Column="0" x:Name="btnok" Text="OK" Clicked="btnok_Clicked"></Button>
-            <Button Grid.Row="3" Grid.Column="1" x:Name="btncancel" Text="Cancel" Clicked="btncancel_Clicked"></Button>
-        </Grid>
+            <controles:AZLabel Grid.Row="2" Grid.Column="0" Text="Mot de passe"></controles:AZLabel>
+            <controles:AZEntry Grid.Row="2" Grid.Column="1" x:Name="txtpwd_usr" IsPassword="True"></controles:AZEntry>
+            <controles:AZButton Grid.Row="3" Grid.Column="0" x:Name="btnok" Text="OK" Clicked="btnok_Clicked"></controles:AZButton>
+            <controles:AZButton Grid.Row="3" Grid.Column="1" x:Name="btncancel" Text="Cancel" Clicked="btncancel_Clicked"></controles:AZButton>
+        </controles:AZGrid>
     </ContentPage.Content>
 </ContentPage>

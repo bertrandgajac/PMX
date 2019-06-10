@@ -37,7 +37,7 @@ namespace PMX
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            if (((App)Application.Current).LoginFait())
+            if (((App)Application.Current).LoginFait)
             {
                 btn_loges.IsEnabled = true;
                 btn_prs.IsEnabled = true;

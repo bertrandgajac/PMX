@@ -18,7 +18,7 @@ namespace PMX
             int mode_generation = 3;
             int lg_min_champ_ecran = 50;
             int lg_max_champ_ecran = 150;
-            bool avec_redim = true;
+            //bool avec_redim = true;
             //            string nom_classe_ecran = "bcr";
             //            string nom_cle_primaire = "id_chassis";
             /*
@@ -28,6 +28,7 @@ namespace PMX
             */
             bool proc_avec_user = false;
             string nom_champ_etat = "Mode";
+            double taille_textes = 15.0;
             /*
             List<string> lst_nom_tab = new List<string>() { "chassis", "platine" };
             string sql_recherche = "select @top * from v_chassis_recherche where 1=1 @critere";
@@ -37,7 +38,7 @@ namespace PMX
             //            string sql_recherche = "select @top T.id_prs,T.nom_prs,T.prenom_prs,T.id_loge,l.nom_loge as id_logeWITH,T.id_deg_bl,d.nom_deg as id_deg_blWITH,T.ad_elec,T.id_etat_prs,e.etat_prs as id_etat_prsWITH FROM prs T inner join loge l on T.id_loge=l.id_loge inner join deg d on T.id_deg_bl=d.id_deg inner join etat_prs e on T.id_etat_prs=e.id_etat_prs WHERE 1=1 @critere ORDER BY nom_prs,prenom_prs";
 
             string nom_ecran = "Requeteur";
-            Init(nom_serveur, nom_bd, mode_generation, nom_ecran, lst_nom_tab, proc_avec_user, nom_champ_etat, lg_min_champ_ecran, lg_max_champ_ecran, avec_redim);
+            Init(nom_serveur, nom_bd, mode_generation, nom_ecran, lst_nom_tab, proc_avec_user, nom_champ_etat, lg_min_champ_ecran, lg_max_champ_ecran, taille_textes);
         }
         /*
         public override async Task<bool> Rechercher()
@@ -89,7 +90,7 @@ namespace PMX
         */
         private async void Login()
         {
-            if (!((App)Application.Current).LoginFait())
+            if (!((App)Application.Current).LoginFait)
             {
                 await Navigation.PushAsync(new DebutPage());
             }

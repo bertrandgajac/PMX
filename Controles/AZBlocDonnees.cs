@@ -9,70 +9,70 @@ using Xamarin.Forms;
 namespace Controles
 {
     public enum AZTypeBlocDonnees { UNDEFINED, Formulaire, Grille, CriteresRecherche };
+    public enum AZSeparationColonnes { Splitter, BoutonsAuDessus, BoutonsALaFinDesChamps };
     public class AZBlocDonnees
     {
-        private const bool m_avec_grid_splitter = true;
-        private const int m_largeur_grid_splitter = 20;
-        private AZEcran _p;
-        private AZOnglet _o;
-        private AZTypeBlocDonnees _type_bloc_donnees;
-        private List<AZChamp> _lc;
+        private const AZSeparationColonnes m_separation_colonnes = AZSeparationColonnes.BoutonsALaFinDesChamps;
+        private const int m_largeur_separation_colonnes = 20;
+        private AZEcran m_p;
+        private AZOnglet m_o;
+        private AZTypeBlocDonnees m_type_bloc_donnees;
+        private List<AZChamp> m_lc;
         //        private List<AZChampCritere> _lc_criteres;
-        private string _nom_table_bloc;
-        private string _header;
-        private DataTable _dt;
-        private DataTable _dt_suppr;
-        private string _req_lire;
-        private string _req_maj;
-        private string _proc_maj;
-        private ScrollView _sv;
-        private ListView _dg;
+        private string m_nom_table_bloc;
+        private string m_header;
+        private DataTable m_dt;
+        private DataTable m_dt_suppr;
+        private string m_req_lire;
+        private string m_req_maj;
+        private string m_proc_maj;
+        private AZScrollView m_sv;
+        private AZListView m_dg;
         //ABCD        private ListView _dgr;
-        private bool _avec_box_view;
-        private const double taille_textes = 15.0;
+        private bool m_avec_box_view;
 
         public AZBlocDonnees(AZEcran p, AZOnglet o, AZTypeBlocDonnees type_bloc_donnees, string nom_tab_bloc)
         {
-            _p = p;
-            _o = o;
-            _type_bloc_donnees = type_bloc_donnees;
-            _lc = new List<AZChamp>();
-            _nom_table_bloc = nom_tab_bloc;
+            m_p = p;
+            m_o = o;
+            m_type_bloc_donnees = type_bloc_donnees;
+            m_lc = new List<AZChamp>();
+            m_nom_table_bloc = nom_tab_bloc;
         }
         public AZBlocDonnees(AZEcran p, AZOnglet o, AZTypeBlocDonnees type_bloc_donnees, List<AZChamp> lc, string nom_tab_bloc, string header, string req_lire, string req_maj, string proc_maj)
         {
-            _p = p;
-            _o = o;
-            _type_bloc_donnees = type_bloc_donnees;
-            _lc = lc;
-            _nom_table_bloc = nom_tab_bloc;
-            _header = header;
-            _req_lire = req_lire;
-            _req_maj = req_maj;
-            _proc_maj = proc_maj;
+            m_p = p;
+            m_o = o;
+            m_type_bloc_donnees = type_bloc_donnees;
+            m_lc = lc;
+            m_nom_table_bloc = nom_tab_bloc;
+            m_header = header;
+            m_req_lire = req_lire;
+            m_req_maj = req_maj;
+            m_proc_maj = proc_maj;
         }
-        public AZEcran p { get { return _p; } set { _p = value; } }
-        public AZOnglet o { get { return _o; } set { _o = value; } }
-        public AZTypeBlocDonnees type_bloc_donnees { get { return _type_bloc_donnees; } set { _type_bloc_donnees = value; } }
-        public List<AZChamp> lc { get { return _lc; } set { _lc = value; } }
-        public string nom_table_bloc { get { return _nom_table_bloc; } set { _nom_table_bloc = value; } }
-        public string header { get { return _header; } set { _header = value; } }
-        public DataTable dt { get { return _dt; } set { _dt = value; } }
-        public DataTable dt_suppr { get { return _dt_suppr; } set { _dt_suppr = value; } }
-        public string req_lire { get { return _req_lire; } set { _req_lire = value; } }
-        public string req_maj { get { return _req_maj; } set { _req_maj = value; } }
-        public string proc_maj { get { return _proc_maj; } set { _proc_maj = value; } }
-        public ScrollView sv { get { return _sv; } set { _sv = value; } }
-        public ListView dg { get { return _dg; } set { _dg = value; } }
+        public AZEcran p { get { return m_p; } set { m_p = value; } }
+        public AZOnglet o { get { return m_o; } set { m_o = value; } }
+        public AZTypeBlocDonnees type_bloc_donnees { get { return m_type_bloc_donnees; } set { m_type_bloc_donnees = value; } }
+        public List<AZChamp> lc { get { return m_lc; } set { m_lc = value; } }
+        public string nom_table_bloc { get { return m_nom_table_bloc; } set { m_nom_table_bloc = value; } }
+        public string header { get { return m_header; } set { m_header = value; } }
+        public DataTable dt { get { return m_dt; } set { m_dt = value; } }
+        public DataTable dt_suppr { get { return m_dt_suppr; } set { m_dt_suppr = value; } }
+        public string req_lire { get { return m_req_lire; } set { m_req_lire = value; } }
+        public string req_maj { get { return m_req_maj; } set { m_req_maj = value; } }
+        public string proc_maj { get { return m_proc_maj; } set { m_proc_maj = value; } }
+        public AZScrollView sv { get { return m_sv; } set { m_sv = value; } }
+        public AZListView dg { get { return m_dg; } set { m_dg = value; } }
         //ABCD        public ListView dgr { get { return _dgr; } set { _dgr = value; } }
-        public string NomDataGridPourGrille { get { return "dg" + nom_table_bloc; } }
-        public bool avec_box_view { get { return _avec_box_view; } set { _avec_box_view = value; } }
+        public string NomDataGridPourGrille { get { return "dg" + m_nom_table_bloc; } }
+        public bool avec_box_view { get { return m_avec_box_view; } set { m_avec_box_view = value; } }
 
         protected async void AfficherMessage(string msg)
         {
             bool trouve = false;
             bool fini = false;
-            Element ma_page = _sv;
+            Element ma_page = m_sv;
             while (!fini)
             {
                 if (ma_page is Page)
@@ -112,7 +112,7 @@ namespace Controles
         public async Task<bool> GenererChamps(string sql)
         {
             AccesBdClient.AccesBdClient ab = new AccesBdClient.AccesBdClient();
-            _dt = await ab.LireTable(sql);
+            m_dt = await ab.LireTable(sql);
             return await GenererChamps();
         }
         public async Task<bool> GenererChamps()
@@ -416,15 +416,15 @@ namespace Controles
                                     }
                                     if (nom_tab_ref_pour_cbo.Length > 0)
                                     {
-                                        base_req = "select id_" + nom_tab_ref_pour_cbo + " as @id,dbo.fct_rep('" + nom_tab_ref_pour_cbo + "',id_" + nom_tab_ref_pour_cbo + ") as @lib from " + nom_tab_ref_pour_cbo + " where 1=1 order by 2";
+                                        base_req = "select @top id_" + nom_tab_ref_pour_cbo + " as @id,dbo.fct_rep('" + nom_tab_ref_pour_cbo + "',id_" + nom_tab_ref_pour_cbo + ") as @lib from " + nom_tab_ref_pour_cbo + " where 1=1 order by 2";
                                         base_filtre_lib = " and dbo.fct_rep('" + nom_tab_ref_pour_cbo + "')='@valeur'";
                                         base_filtre_id = " and id_" + nom_tab_ref_pour_cbo + "=@valeur";
                                     }
                                 }
                                 bool maj = false;
-                                if (_proc_maj != null)
+                                if (m_proc_maj != null)
                                 {
-                                    sql = "select count(*) from INFORMATION_SCHEMA.PARAMETERS where SPECIFIC_NAME='" + _proc_maj + "' and PARAMETER_NAME='@" + nom_col + "'";
+                                    sql = "select count(*) from INFORMATION_SCHEMA.PARAMETERS where SPECIFIC_NAME='" + m_proc_maj + "' and PARAMETER_NAME='@" + nom_col + "'";
                                     int? nb_maj = await ab.LireEntier(sql);
                                     maj = nb_maj.Value > 0;
                                 }
@@ -433,7 +433,7 @@ namespace Controles
                                     visible = false;
                                 //                                AZChamp c = new AZChamp(tc, desc_col, nom_col, lg_col, largeur_ecran, nom_tab, nom_tab_ref_pour_cbo, maj, visible, dans_grille);
                                 bool oblig = col.AllowDBNull;
-                                AZChamp c = new AZChamp(tc, desc_col, nom_col, lg_col, largeur_ecran, nom_tab_ref_pour_cbo, base_req, base_filtre_id, base_filtre_lib, maj, oblig, visible);
+                                AZChamp c = new AZChamp(this, tc, desc_col, nom_col, lg_col, largeur_ecran, nom_tab_ref_pour_cbo, base_req, base_filtre_id, base_filtre_lib, maj, oblig, visible);
                                 lc.Add(c);
                             }
                         }
@@ -445,25 +445,36 @@ namespace Controles
         }
         private ViewCell CreerItemTemplateRecherche()
         {
-            return CreerItemTemplate("rech", false);
+            return CreerItemTemplate("rech", false, m_lc);
         }
         private ViewCell CreerItemTemplateCriteres()
         {
-            return CreerItemTemplate("crit", false);
+            if (m_p is AZEcranRecherche)
+            {
+                List<AZChamp> lc_temp = new List<AZChamp>();
+                foreach(AZChamp c in ((AZEcranRecherche)m_p).lc_criteres)
+                {
+                    lc_temp.Add(c);
+                }
+                return CreerItemTemplate("crit", false, lc_temp);
+            }
+            else
+                return CreerItemTemplate("crit", false, m_lc);
         }
         private ViewCell CreerItemTemplateOnglet()
         {
-            return CreerItemTemplate("", true);
+            return CreerItemTemplate("", true, m_lc);
         }
-        private ViewCell CreerItemTemplate(string prefixe, bool avec_boxview)
+        private ViewCell CreerItemTemplate(string prefixe, bool avec_boxview, List<AZChamp> liste_champs)
         {
             int nb_max_champs_grille = 999;
+            double taille_textes = m_p.taille_textes;
             //            bool avec_grid_splitter = false;
             //            int largeur_grid_splitter = 10;
             ViewCell vc = null;
             try
             {
-                var gr = new Grid();
+                var gr = new AZGrid();
                 /*
                 Label lbl = new Label();
                 lbl.Text = "A";
@@ -473,25 +484,26 @@ namespace Controles
                 int num_champ = 0;
                 if (avec_boxview)
                 {
-                    gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(10, GridUnitType.Absolute) });
-                    BoxView bv = new BoxView();
+                    gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = gr.DonnerGridLength(10, AZGridUnitType.Absolute) });
+                    AZBoxView bv = new AZBoxView();
                     bv.BackgroundColor = Color.Black;
+                    bv.SetBinding(BoxView.ClassIdProperty, "ItemArray[1]");
                     Grid.SetColumn(bv, num_col);
                     gr.Children.Add(bv);
                     num_col++;
                 }
                 //                bool debut = true;
                 int dernier_champ_visible = 0;
-                for(int index_champ=0;index_champ<lc.Count;index_champ++)
+                for (int index_champ = 0; index_champ < liste_champs.Count; index_champ++)
                 {
-                    AZChamp c = lc[index_champ];
+                    AZChamp c = liste_champs[index_champ];
                     if (c.visible)
                         dernier_champ_visible = index_champ;
                 }
-                for (int index_champ = 0; index_champ < lc.Count; index_champ++)
+                for (int index_champ = 0; index_champ < liste_champs.Count; index_champ++)
                 {
-                    AZChamp c = lc[index_champ];
-                    if (c.visible && num_col < nb_max_champs_grille)
+                    AZChamp c = liste_champs[index_champ];
+                    if (c.visible)
                     {
                         /*
                         if (m_avec_grid_splitter)
@@ -546,14 +558,19 @@ namespace Controles
                         }
                         */
                         int lg_col = c.lg_champ_ecran;
-                        if (m_avec_grid_splitter)
+                        if (m_separation_colonnes == AZSeparationColonnes.Splitter)
                         {
-                            int delta_lg= m_largeur_grid_splitter + (int)gr.ColumnSpacing;
+                            int delta_lg = m_largeur_separation_colonnes + (int)gr.ColumnSpacing;
                             if (index_champ == dernier_champ_visible)
-                                delta_lg += m_largeur_grid_splitter;
+                                delta_lg += m_largeur_separation_colonnes;
                             lg_col += delta_lg;
                         }
-                        gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(lg_col, GridUnitType.Absolute) });
+                        else if (m_separation_colonnes == AZSeparationColonnes.BoutonsALaFinDesChamps)
+                        {
+                            int delta_lg = 2 * m_largeur_separation_colonnes + (int)gr.ColumnSpacing;
+                            lg_col += delta_lg;
+                        }
+                        gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = gr.DonnerGridLength(lg_col, AZGridUnitType.Absolute) });
                         /*
                         bool modif = c.maj;
                         if (prefixe == "crit")
@@ -564,9 +581,9 @@ namespace Controles
                         bool modif = prefixe == "rech" ? false : c.maj;
                         bool colorer = false;
                         Color coul_fond = Color.White;
-                        if(prefixe!="rech" && prefixe!="crit")
+                        if (prefixe != "rech" && prefixe != "crit")
                         {
-                            colorer = true;
+                            //                            colorer = true;
                             if (modif == false)
                                 coul_fond = Color.LightGray;
                             else if (c.oblig)
@@ -575,21 +592,23 @@ namespace Controles
                         switch (c.type)
                         {
                             case AZTypeDeChamp.Blob:
-                                Button btn = new Button();
+                                AZButton btn = new AZButton();
                                 Grid.SetColumn(btn, num_col);
                                 btn.Clicked += BtnBlobClicked;
                                 btn.ClassId = prefixe + c.NomChampBD();
+//                                btn.IsEnabled = false;
                                 gr.Children.Add(btn);
                                 num_col++;
                                 break;
                             case AZTypeDeChamp.Booleen:
-                                Switch sw = new Switch();
+                                AZSwitch sw = new AZSwitch();
                                 Grid.SetColumn(sw, num_col);
                                 sw.SetBinding(Switch.IsToggledProperty, "ItemArray[" + num_champ.ToString() + "]");
                                 sw.Toggled += SwToggled;
                                 sw.ClassId = prefixe + c.NomChampBD();
+                                sw.IsEnabled = prefixe == "crit";
                                 sw.IsEnabled = modif;
-                                if(colorer)
+                                if (colorer)
                                     sw.BackgroundColor = coul_fond;
                                 gr.Children.Add(sw);
                                 num_col++;
@@ -598,8 +617,8 @@ namespace Controles
                                 //                                int num_champ_lib = num_champ + 1;
                                 if (modif == false)
                                 {
-                                    Label lbl = new Label();
-                                    lbl.FontSize = taille_textes;
+                                    AZLabel lbl = new AZLabel();
+                                    //                                    lbl.FontSize = taille_textes;
                                     Grid.SetColumn(lbl, num_col);
                                     bool binding_fait = false;
                                     for (int i = 0; i < lc.Count; i++)
@@ -616,48 +635,51 @@ namespace Controles
                                         lbl.Text = "Manque le champ WITH";
                                     }
                                     lbl.ClassId = prefixe + c.NomChampBD();
-                                    if(colorer)
+                                    if (colorer)
                                         lbl.BackgroundColor = coul_fond;
                                     gr.Children.Add(lbl);
                                 }
                                 else
                                 {
-                                    AZComboCS cbo = new AZComboCS();
+                                    string titre = c.header;
+                                    if (titre == "Début")
+                                    {
+                                        int a = 0;
+                                    }
+                                    string base_req = c.base_req;
+                                    string base_filtre_lib = c.base_filtre_lib;
+                                    string base_filtre_id = c.base_filtre_id;
+                                    AZComboCS cbo = new AZComboCS(c, titre, base_req, base_filtre_lib, base_filtre_id);
+//                                    cbo.IsEnabled = prefixe == "crit";
                                     Grid.SetColumn(cbo, num_col);
                                     cbo.SetBinding(AZComboCS.CboIdProperty, "ItemArray[" + num_champ.ToString() + "]");
-                                    for (int i = 0; i < lc.Count; i++)
+                                    for (int i = 0; i < liste_champs.Count; i++)
                                     {
-                                        if (lc[i].NomChampBD() == c.NomChampBD() + "WITH")
+                                        if (liste_champs[i].NomChampBD() == c.NomChampBD() + "WITH")
                                         {
                                             cbo.SetBinding(AZComboCS.CboLibProperty, "ItemArray[" + i.ToString() + "]");
                                         }
                                     }
+//                                    cbo.SetBinding(AZComboCS.CboIdObjetProperty, "ItemArray[i" + num_champ.ToString() + "]");
                                     cbo.CboIdChanged += CboIdChanged;
                                     cbo.CboLibChanged += CboLibChanged;
                                     cbo.ClassId = prefixe + c.NomChampBD();
-                                    cbo.titre = c.header;
-                                    if (cbo.titre == "Début")
-                                    {
-                                        int a = 0;
-                                    }
-                                    cbo.base_req = c.base_req;
-                                    cbo.base_filtre_lib = c.base_filtre_lib;
-                                    cbo.base_filtre_id = c.base_filtre_id;
-                                    if(colorer)
+                                    if (colorer)
                                         cbo.BackgroundColor = coul_fond;
                                     gr.Children.Add(cbo);
                                 }
                                 num_col++;
                                 break;
                             case AZTypeDeChamp.Date:
-                                DatePicker dp = new DatePicker();
+                                AZDatePicker dp = new AZDatePicker();
                                 dp.FontSize = taille_textes;
                                 Grid.SetColumn(dp, num_col);
                                 dp.SetBinding(DatePicker.DateProperty, new Binding("ItemArray[" + num_champ.ToString() + "]"));
                                 dp.DateSelected += DateSelected;
                                 dp.ClassId = prefixe + c.NomChampBD();
+                                dp.IsEnabled = prefixe == "crit"; ;
                                 dp.IsEnabled = modif;
-                                if(colorer)
+                                if (colorer)
                                     dp.BackgroundColor = coul_fond;
                                 gr.Children.Add(dp);
                                 num_col++;
@@ -667,23 +689,25 @@ namespace Controles
                             case AZTypeDeChamp.Texte:
                                 if (modif == false)
                                 {
-                                    Label lbl = new Label();
+                                    AZLabel lbl = new AZLabel();
                                     lbl.FontSize = taille_textes;
                                     Grid.SetColumn(lbl, num_col);
                                     lbl.SetBinding(Label.TextProperty, new Binding("ItemArray[" + num_champ.ToString() + "]"));
                                     lbl.ClassId = prefixe + c.NomChampBD();
-                                    if(colorer)
+                                    if (colorer)
                                         lbl.BackgroundColor = coul_fond;
                                     gr.Children.Add(lbl);
                                 }
                                 else
                                 {
-                                    Entry en = new Entry();
+                                    AZEntry en = new AZEntry();
                                     en.FontSize = taille_textes;
                                     Grid.SetColumn(en, num_col);
                                     en.SetBinding(Entry.TextProperty, new Binding("ItemArray[" + num_champ.ToString() + "]"));
                                     en.TextChanged += TextChanged;
                                     en.ClassId = prefixe + c.NomChampBD();
+                                    en.IsEnabled = prefixe == "crit";
+                                    en.IsEnabled = modif;
                                     if (colorer)
                                         en.BackgroundColor = coul_fond;
                                     gr.Children.Add(en);
@@ -691,7 +715,7 @@ namespace Controles
                                 num_col++;
                                 break;
                         }
-//                        debut = false;
+                        //                        debut = false;
                     }
                     num_champ++;
                 }
@@ -708,17 +732,24 @@ namespace Controles
         {
             try
             {
-                Button btn = (Button)sender;
-                Grid gr = (Grid)btn.Parent;
+                AZButton btn = (AZButton)sender;
+                AZGrid gr = (AZGrid)btn.Parent;
+                string str_id_doc = "";
                 ViewCell vc = (ViewCell)gr.Parent;
-                ListView lv = (ListView)vc.Parent;
+                AZListView lv = (AZListView)vc.Parent;
+                AZGrid gr2 = (AZGrid)lv.Parent;
+                string nom_table = gr2.ClassId.Substring(2);
+                string nom_col = "id_" + nom_table;
+                /*
                 if (lv.SelectedItem != null)
                 {
-                    Grid gr2 = (Grid)lv.Parent;
-                    string nom_table = gr2.ClassId.Substring(2);
                     DataRow dr = (DataRow)lv.SelectedItem;
-                    string nom_col = "id_" + nom_table;
                     string str_id_doc = dr[nom_col].ToString();
+                */
+                AZBoxView bv = (AZBoxView)gr.Children[0];
+                str_id_doc = bv.ClassId;
+                if (str_id_doc.Length>0)
+                {
                     string nom_champ = btn.ClassId;
                     if (nom_champ.EndsWith("@voir_doc"))
                     {
@@ -763,34 +794,35 @@ namespace Controles
                 AfficherException(ex);
             }
         }
-        private Grid CreerGrilleRedimensionnement(int num_col, int num_champ)
+        private AZGrid CreerGrilleRedimensionnement(int num_col, int num_champ)
         {
-            Grid gr = new Grid();
-            gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(0.5, GridUnitType.Star) });
-            gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(0.5, GridUnitType.Star) });
+            AZGrid gr = new AZGrid();
+            gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = gr.DonnerGridLength(0.5, AZGridUnitType.Star) });
+            gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = gr.DonnerGridLength(0.5, AZGridUnitType.Star) });
             gr.Padding = 0.0;
             gr.ColumnSpacing = 0.0;
-            Button btnmoins = new Button();
+            AZButton btnmoins = new AZButton();
             btnmoins.Text = "-";
             btnmoins.BackgroundColor = Color.LightGreen;
             string classid = num_col.ToString() + "," + num_champ.ToString();
             btnmoins.ClassId = classid;
-//            btnmoins.HeightRequest = 30;
+            //            btnmoins.HeightRequest = 30;
             //            btnmoins.WidthRequest = c.largeur_champ_ecran / 2;
             btnmoins.Clicked += BtnMoinsClicked;
             Grid.SetColumn(btnmoins, 0);
             gr.Children.Add(btnmoins);
-            Button btnplus = new Button();
+            AZButton btnplus = new AZButton();
             btnplus.Text = "+";
             btnplus.BackgroundColor = Color.LightPink;
             btnplus.ClassId = classid;
-//            btnplus.HeightRequest = 30;
+            //            btnplus.HeightRequest = 30;
             //            btnplus.WidthRequest = c.largeur_champ_ecran / 2;
             btnplus.Clicked += BtnPlusClicked;
             Grid.SetColumn(btnplus, 1);
             gr.Children.Add(btnplus);
             return gr;
         }
+        /*
         private Grid MaGridGrandMere(Element el)
         {
             bool trouve = false;
@@ -839,7 +871,6 @@ namespace Controles
             }
             return (Grid)el;
         }
-        /*
         private void DeplacerFrontiereVerticale(Button btn, bool vers_la_gauche)
         {
             int delta_largeur = vers_la_gauche ? -10 : 10;
@@ -893,7 +924,7 @@ namespace Controles
         */
         public void DeplacerFrontiereVerticale(string classid, int delta_largeur, bool maj)
         {
-            Grid gr = (Grid)sv.Content;
+            AZGrid gr = (AZGrid)sv.Content;
             if (gr != null)
             {
                 string[] tab_num = classid.Split(',');
@@ -947,7 +978,7 @@ namespace Controles
         {
             try
             {
-                Button btn = (Button)sender;
+                AZButton btn = (AZButton)sender;
                 int delta_vers_la_gauche = -10;
                 DeplacerFrontiereVerticale(btn.ClassId, delta_vers_la_gauche, true);
             }
@@ -960,7 +991,7 @@ namespace Controles
         {
             try
             {
-                Button btn = (Button)sender;
+                AZButton btn = (AZButton)sender;
                 int delta_vers_la_droite = 10;
                 DeplacerFrontiereVerticale(btn.ClassId, delta_vers_la_droite, true);
             }
@@ -982,26 +1013,26 @@ namespace Controles
             activation_tri.Tapped += Activation_tri_Tapped;
             //int largeur_grid_splitter = 10;
             int nb_max_champs_formulaire = 999;
-            int hauteur_grille_redimensionnement = m_avec_grid_splitter ? 1 : 30;
-            sv = new ScrollView();
-            sv.IsVisible = false;
-            switch (_type_bloc_donnees)
+            int hauteur_grille_redimensionnement = m_separation_colonnes == AZSeparationColonnes.BoutonsAuDessus ? 30 : 1;
+            m_sv = new AZScrollView();
+            m_sv.IsVisible = false;
+            switch (m_type_bloc_donnees)
             {
                 case AZTypeBlocDonnees.Formulaire:
                     int num_lig = 0;
-                    sv.Orientation = ScrollOrientation.Both;
-                    Grid grf = new Grid();
-                    grf.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(150, GridUnitType.Absolute) });
-                    grf.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+                    m_sv.Orientation = ScrollOrientation.Both;
+                    AZGrid grf = new AZGrid();
+                    grf.ColumnDefinitions.Add(new ColumnDefinition() { Width = grf.DonnerGridLength(150, AZGridUnitType.Absolute) });
+                    grf.ColumnDefinitions.Add(new ColumnDefinition() { Width = grf.DonnerGridLength(1, AZGridUnitType.Star) });
                     //                        o.sv = (ScrollView)FindByName("tbprincipal");
                     //                        Grid gr = (Grid)FindByName("grprincipal");
-                    for (int num_champ = 0; num_champ < lc.Count; num_champ++)
+                    for (int num_champ = 0; num_champ < m_lc.Count; num_champ++)
                     {
-                        AZChamp c = lc[num_champ];
+                        AZChamp c = m_lc[num_champ];
                         if (c.visible && num_lig < nb_max_champs_formulaire)
                         {
-                            grf.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(40, GridUnitType.Absolute) });
-                            Label lbl = new Label();
+                            grf.RowDefinitions.Add(new RowDefinition() { Height = grf.DonnerGridLength(40, AZGridUnitType.Absolute) });
+                            AZLabel lbl = new AZLabel();
                             Grid.SetColumn(lbl, 0);
                             Grid.SetRow(lbl, num_lig);
                             lbl.Text = c.header;
@@ -1009,7 +1040,7 @@ namespace Controles
                             switch (c.type)
                             {
                                 case AZTypeDeChamp.Booleen:
-                                    Switch sw = new Switch();
+                                    AZSwitch sw = new AZSwitch();
                                     Grid.SetColumn(sw, 1);
                                     Grid.SetRow(sw, num_lig);
                                     sw.ClassId = c.NomChampBD();
@@ -1018,23 +1049,23 @@ namespace Controles
                                     lc[num_champ].champ_saisie = sw;
                                     break;
                                 case AZTypeDeChamp.Combobox:
-                                    AZComboCS cbo = new AZComboCS();
+                                    string titre = c.header;
+                                    string base_req = c.base_req;
+                                    string base_filtre_lib = c.base_filtre_lib;
+                                    string base_filtre_id = c.base_filtre_id;
+                                    AZComboCS cbo = new AZComboCS(c, titre, base_req, base_filtre_lib, base_filtre_id);
                                     Grid.SetColumn(cbo, 1);
                                     Grid.SetRow(cbo, num_lig);
                                     cbo.ClassId = c.NomChampBD();
                                     cbo.CboIdChanged += CboIdChanged;
                                     cbo.CboLibChanged += CboLibChanged;
-                                    cbo.titre = c.header;
-                                    cbo.base_req = c.base_req;
-                                    cbo.base_filtre_lib = c.base_filtre_lib;
-                                    cbo.base_filtre_id = c.base_filtre_id;
                                     grf.Children.Add(cbo);
                                     lc[num_champ].champ_saisie = cbo;
                                     break;
                                 case AZTypeDeChamp.Double:
                                 case AZTypeDeChamp.Entier:
                                 case AZTypeDeChamp.Texte:
-                                    Entry en = new Entry();
+                                    AZEntry en = new AZEntry();
                                     Grid.SetColumn(en, 1);
                                     Grid.SetRow(en, num_lig);
                                     en.ClassId = c.NomChampBD();
@@ -1043,7 +1074,7 @@ namespace Controles
                                     lc[num_champ].champ_saisie = en;
                                     break;
                                 case AZTypeDeChamp.Date:
-                                    DatePicker dp = new DatePicker();
+                                    AZDatePicker dp = new AZDatePicker();
                                     Grid.SetColumn(dp, 1);
                                     Grid.SetRow(dp, num_lig);
                                     dp.ClassId = c.NomChampBD();
@@ -1055,50 +1086,51 @@ namespace Controles
                             num_lig++;
                         }
                     }
-                    sv.Content = grf;
+                    m_sv.Content = grf;
                     break;
                 case AZTypeBlocDonnees.CriteresRecherche:
                 case AZTypeBlocDonnees.Grille:
-                    sv.Orientation = ScrollOrientation.Horizontal;
-                    if (sv.Content != null)
+                    m_sv.Orientation = ScrollOrientation.Horizontal;
+                    m_sv.HorizontalScrollBarVisibility = ScrollBarVisibility.Always;
+                    if (m_sv.Content != null)
                     {
-                        Grid gr_tmp = (Grid)sv.Content;
+                        AZGrid gr_tmp = (AZGrid)m_sv.Content;
                         gr_tmp.Children.Clear();
-                        sv.Content = null;
+                        m_sv.Content = null;
                     }
-                    Grid grg = new Grid();
+                    AZGrid grg = new AZGrid();
                     grg.ClassId = NomDataGridPourGrille;
-                    grg.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(hauteur_grille_redimensionnement, GridUnitType.Absolute) });
+                    grg.RowDefinitions.Add(new RowDefinition() { Height = grg.DonnerGridLength(hauteur_grille_redimensionnement, AZGridUnitType.Absolute) });
                     //entetes de colonnes
-                    grg.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(20, GridUnitType.Absolute) });
-                    if (_type_bloc_donnees == AZTypeBlocDonnees.CriteresRecherche)
+                    grg.RowDefinitions.Add(new RowDefinition() { Height = grg.DonnerGridLength(20, AZGridUnitType.Absolute) });
+                    if (m_type_bloc_donnees == AZTypeBlocDonnees.CriteresRecherche)
                     {
                         // grille de criteres
-                        grg.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(35, GridUnitType.Absolute) });
+                        grg.RowDefinitions.Add(new RowDefinition() { Height = grg.DonnerGridLength(35, AZGridUnitType.Absolute) });
                     }
                     // donnees
-                    grg.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
+                    grg.RowDefinitions.Add(new RowDefinition() { Height = grg.DonnerGridLength(1, AZGridUnitType.Star) });
                     int num_col = 0;
-                    if (type_bloc_donnees != AZTypeBlocDonnees.CriteresRecherche)
+                    if (m_type_bloc_donnees != AZTypeBlocDonnees.CriteresRecherche)
                     {
                         // BoxView
-                        grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(10, GridUnitType.Absolute) });
+                        grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = grg.DonnerGridLength(10, AZGridUnitType.Absolute) });
                         num_col = 1;
                     }
                     //                    bool debut = true;
                     //                    AZChamp champ_precedent = null;
                     int dernier_champ_visible = 0;
-                    for (int i = 0; i < lc.Count; i++)
+                    for (int i = 0; i < m_lc.Count; i++)
                     {
-                        AZChamp c = lc[i];
+                        AZChamp c = m_lc[i];
                         if (c.visible)
                         {
                             dernier_champ_visible = i;
                         }
                     }
-                    for (int i = 0; i < lc.Count; i++)
+                    for (int i = 0; i < m_lc.Count; i++)
                     {
-                        AZChamp c = lc[i];
+                        AZChamp c = m_lc[i];
                         if (c.visible)
                         {
                             //                            string classid_des_btn = num_col.ToString();
@@ -1116,8 +1148,8 @@ namespace Controles
                                 num_col++;
                             }
                             */
-                            grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(c.lg_champ_ecran, GridUnitType.Absolute) });
-                            Label lbl = new Label();
+                            grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = grg.DonnerGridLength(c.lg_champ_ecran, AZGridUnitType.Absolute) });
+                            AZLabel lbl = new AZLabel();
                             Grid.SetColumn(lbl, num_col);
                             Grid.SetRow(lbl, 1);
                             lbl.Text = c.header;
@@ -1126,18 +1158,18 @@ namespace Controles
                             lbl.ClassId = i.ToString();
                             lbl.GestureRecognizers.Add(activation_tri);
                             grg.Children.Add(lbl);
-                            if (m_avec_grid_splitter == false)
+                            if (m_separation_colonnes == AZSeparationColonnes.BoutonsAuDessus)
                             {
-                                Grid grbtn = CreerGrilleRedimensionnement(num_col, i);
+                                AZGrid grbtn = CreerGrilleRedimensionnement(num_col, i);
                                 Grid.SetColumn(grbtn, num_col);
                                 Grid.SetRow(grbtn, 0);
                                 grg.Children.Add(grbtn);
                             }
-                            else if (i < dernier_champ_visible)
+                            else if (m_separation_colonnes == AZSeparationColonnes.Splitter && i < dernier_champ_visible)
                             {
-                                grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(m_largeur_grid_splitter, GridUnitType.Absolute) });
+                                grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = grg.DonnerGridLength(m_largeur_separation_colonnes, AZGridUnitType.Absolute) });
                                 AZGridSplitter grspl = new AZGridSplitter() { BackgroundColor = Color.Orange, HorizontalOptions = LayoutOptions.Center };
-                                grspl.m_p = _p;
+                                grspl.m_p = m_p;
                                 grspl.m_bloc = this;
                                 grspl.ClassId = (num_col).ToString() + "," + i.ToString();
                                 Grid.SetColumn(grspl, ++num_col);
@@ -1160,41 +1192,43 @@ namespace Controles
                                 Grid.SetRow(btnplus, 1);
                                 grg.Children.Add(btnplus);
                                 */
-                                grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(m_largeur_grid_splitter * 2, GridUnitType.Absolute) });
-                                Grid grbtn = CreerGrilleRedimensionnement(num_col++, i);
+                                grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = grg.DonnerGridLength(m_largeur_separation_colonnes * 2, AZGridUnitType.Absolute) });
+                                AZGrid grbtn = CreerGrilleRedimensionnement(num_col++, i);
                                 Grid.SetColumn(grbtn, num_col);
                                 Grid.SetRow(grbtn, 1);
                                 grg.Children.Add(grbtn);
                             }
                             num_col++;
-//                            debut = false;
-//                            champ_precedent = c;
+                            //                            debut = false;
+                            //                            champ_precedent = c;
                         }
                     }
                     //                        sl.Children.Add(gr);
-                    sv.Content = grg;
-                    dg = new ListView();
-                    dg.HasUnevenRows = true;
-                    Grid.SetColumn(dg, 0);
-                    Grid.SetColumnSpan(dg, num_col);
-                    int num_row = _type_bloc_donnees == AZTypeBlocDonnees.CriteresRecherche ? 3 : 2;
-                    Grid.SetRow(dg, num_row);
-                    dg.Margin = 0.0;
-//                    dg.RowHeight = 40;
+                    m_sv.Content = grg;
+                    m_dg = new AZListView();
+                    m_dg.HasUnevenRows = true;
+                    Grid.SetColumn(m_dg, 0);
+                    Grid.SetColumnSpan(m_dg, num_col);
+                    int num_row = m_type_bloc_donnees == AZTypeBlocDonnees.CriteresRecherche ? 3 : 2;
+                    Grid.SetRow(m_dg, num_row);
+                    m_dg.Margin = 0.0;
+                    //                    dg.RowHeight = 40;
                     //20190515                    onglet_actif = o.NomOnglet
-                    if (_type_bloc_donnees == AZTypeBlocDonnees.CriteresRecherche)
-                        dg.ItemTemplate = new DataTemplate(CreerItemTemplateRecherche);
+                    if (m_type_bloc_donnees == AZTypeBlocDonnees.CriteresRecherche)
+                        m_dg.ItemTemplate = new DataTemplate(CreerItemTemplateRecherche);
                     else
-                        dg.ItemTemplate = new DataTemplate(CreerItemTemplateOnglet);
-                    grg.Children.Add(dg);
-                    dg.ItemsSource = null;
+                        m_dg.ItemTemplate = new DataTemplate(CreerItemTemplateOnglet);
+                    grg.Children.Add(m_dg);
+                    m_dg.ItemsSource = null;
                     if (dt != null)
-                        dg.ItemsSource = dt.Rows;
-                    if (_type_bloc_donnees == AZTypeBlocDonnees.CriteresRecherche && p is AZEcranRecherche)
+                        m_dg.ItemsSource = dt.Rows;
+//                    m_dg.ItemSelected += m_dg_ItemSelected;
+//                    m_dg.ItemTapped += m_dg_ItemTapped;
+                    if (m_type_bloc_donnees == AZTypeBlocDonnees.CriteresRecherche && p is AZEcranRecherche)
                     {
                         AZEcranRecherche ecr = (AZEcranRecherche)p;
                         // grille de criteres
-                        ecr.dg_criteres = new ListView();
+                        ecr.dg_criteres = new AZListView();
                         ecr.dg_criteres.ItemsSource = ecr.dt_criteres.Rows;
                         ecr.dg_criteres.ItemTemplate = new DataTemplate(CreerItemTemplateCriteres);
                         Grid.SetColumn(ecr.dg_criteres, 0);
@@ -1202,30 +1236,52 @@ namespace Controles
                         Grid.SetRow(ecr.dg_criteres, 2);
                         ecr.dg_criteres.Margin = 0.0;
                         //                        ecr.dg_criteres.RowHeight = 30;
-                        ecr.dg_criteres.ItemTemplate = new DataTemplate(CreerItemTemplateCriteres);
+//                        ecr.dg_criteres.ItemTemplate = new DataTemplate(CreerItemTemplateCriteres);
                         grg.Children.Add(ecr.dg_criteres);
                     }
                     break;
             }
         }
+        /*
+        private void m_dg_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            //            throw new NotImplementedException();
+            DataRow dr = e.Item as DataRow;
+            string nom_tab = dr.Table.TableName;
+            if (nom_tab != "recherche" && nom_tab != "criteres")
+                ((ListView)sender).SelectedItem = null; // de-select the row
+        }
+        private void m_dg_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            DataRow dr = e.SelectedItem as DataRow;
+            string nom_tab = dr.Table.TableName;
+            if (nom_tab != "recherche" && nom_tab != "criteres")
+            {
+                int idx = e.SelectedItemIndex;
+            }
+            //            throw new NotImplementedException();
+        }
+        */
         private void Activation_tri_Tapped(object sender, EventArgs e)
         {
             try
             {
-                dg.ItemsSource = null;
-                Label lbl = (Label)sender;
-                int num_champ = Convert.ToInt32(lbl.ClassId);
-                DataView dv = dt.DefaultView;
-                dv.Sort = lc[num_champ].NomChampBD();
-                dt = dv.ToTable();
-                dg.ItemsSource = dt.Rows;
+                if (dt != null)
+                {
+                    dg.ItemsSource = null;
+                    Label lbl = (Label)sender;
+                    int num_champ = Convert.ToInt32(lbl.ClassId);
+                    DataView dv = dt.DefaultView;
+                    dv.Sort = lc[num_champ].NomChampBD();
+                    dt = dv.ToTable();
+                    dg.ItemsSource = dt.Rows;
+                }
             }
             catch (Exception ex)
             {
                 AfficherException(ex);
             }
         }
-
         private DataRow DonnerDataRow(object obj)
         {
             DataRow r = null;
@@ -1259,15 +1315,34 @@ namespace Controles
         }
         private void ToucherOngletCourant(bool toucher)
         {
-            if (_o != null)
-                _o.Toucher(toucher);
+            if (m_o != null)
+                m_o.Toucher(toucher);
+        }
+        private void ModifCommun(string nom_champ, object sender, object val)
+        {
+            DataRow r = DonnerDataRow(sender);
+            if (r != null && nom_champ.StartsWith("rech") == false)
+            {
+                string nom_champ_tmp = nom_champ;
+                if (nom_champ.StartsWith("crit"))
+                    nom_champ_tmp = nom_champ.Substring(4);
+                if (r[nom_champ_tmp].ToString().Length > 0 || val.ToString().Length > 0)
+                {
+                    if (r[nom_champ_tmp] != val)
+                    {
+                        r[nom_champ_tmp] = val;
+                        if (!nom_champ.StartsWith("crit"))
+                            ToucherOngletCourant(true);
+                    }
+                }
+            }
         }
         private void ModifEntry(string nom_champ, object sender)
         {
             string val = "";
-            if (sender is Entry)
+            if (sender is AZEntry)
             {
-                Entry c = (Entry)sender;
+                AZEntry c = (AZEntry)sender;
                 val = c.Text;
             }
             else if (sender is AZComboCS)
@@ -1275,6 +1350,7 @@ namespace Controles
                 AZComboCS c = (AZComboCS)sender;
                 val = c.CboLib;
             }
+            /*
             DataRow r = DonnerDataRow(sender);
             if (r != null)
             {
@@ -1288,15 +1364,18 @@ namespace Controles
                         ToucherOngletCourant(true);
                 }
             }
+            */
+            ModifCommun(nom_champ, sender, val);
         }
         private void ModifSwitch(string nom_champ, object sender)
         {
             bool val = false;
-            if (sender is Switch)
+            if (sender is AZSwitch)
             {
-                Switch c = (Switch)sender;
+                AZSwitch c = (AZSwitch)sender;
                 val = c.IsToggled;
             }
+            /*
             DataRow r = DonnerDataRow(sender);
             if (r != null && nom_champ.StartsWith("rech") == false)
             {
@@ -1310,15 +1389,18 @@ namespace Controles
                         ToucherOngletCourant(true);
                 }
             }
+            */
+            ModifCommun(nom_champ, sender, val);
         }
         private void ModifDate(string nom_champ, object sender)
         {
             DateTime val = DateTime.MinValue;
-            if (sender is DatePicker)
+            if (sender is AZDatePicker)
             {
-                DatePicker c = (DatePicker)sender;
+                AZDatePicker c = (AZDatePicker)sender;
                 val = c.Date;
             }
+            /*
             DataRow r = DonnerDataRow(sender);
             if (r != null)
             {
@@ -1332,6 +1414,8 @@ namespace Controles
                         ToucherOngletCourant(true);
                 }
             }
+            */
+            ModifCommun(nom_champ, sender, val);
         }
         private void ModifCboId(string nom_champ, object sender)
         {
@@ -1366,7 +1450,7 @@ namespace Controles
         {
             try
             {
-                Switch sw = (Switch)sender;
+                AZSwitch sw = (AZSwitch)sender;
                 string nom_champ = sw.ClassId;
                 ModifSwitch(nom_champ, sender);
             }
@@ -1379,7 +1463,7 @@ namespace Controles
         {
             try
             {
-                Entry en = (Entry)sender;
+                AZEntry en = (AZEntry)sender;
                 string nom_champ = en.ClassId;
                 ModifEntry(nom_champ, sender);
             }
@@ -1392,7 +1476,7 @@ namespace Controles
         {
             try
             {
-                DatePicker dp = (DatePicker)sender;
+                AZDatePicker dp = (AZDatePicker)sender;
                 string nom_champ = dp.ClassId;
                 ModifDate(nom_champ, sender);
             }
@@ -1430,6 +1514,56 @@ namespace Controles
                 AfficherException(ex);
             }
         }
+        /*
+        public virtual string PreparerSqlPourComboboxDetail(DataRow dr, string nom_grille, string nom_champ)
+        {
+            return "";
+        }
+        */
+        public virtual string PreparerSqlPourComboboxDetail(AZComboCS cbo, AZGrid gr_ligne)
+        {
+            string sql = "";
+            if(m_p is AZEcranComplexe)
+            {
+                sql = ((AZEcranComplexe)m_p).PreparerSqlPourComboboxDetail(cbo, gr_ligne);
+            }
+            return sql;
+        }
     }
-}
+    /*
+    public class ScrollEnabledChangedEventArgs : EventArgs
+    {
+        public ScrollEnabledChangedEventArgs(bool _ancienne_valeur, bool _nouvelle_valeur)
+        {
+            ancienne_valeur = _ancienne_valeur;
+            nouvelle_valeur = _nouvelle_valeur;
+        }
+        public bool ancienne_valeur { get; set; }
+        public bool nouvelle_valeur { get; set; }
+    }
 
+    public class AZScrollView : ScrollView
+    {
+        public AZScrollView():base()
+        {
+
+        }
+        / *
+        public static readonly BindableProperty ScrollEnabledProperty = BindableProperty.Create(nameof(AZScrollView), typeof(bool), typeof(AZScrollView), default(bool), Xamarin.Forms.BindingMode.TwoWay, propertyChanged: OnScrollEnabledChanged);
+        public bool ScrollEnabled;
+        {
+            get { return (bool)GetValue(ScrollEnabledProperty); }
+            set { SetValue(ScrollEnabledProperty, value); }
+        }
+        public event EventHandler<ScrollEnabledChangedEventArgs> ScrollEnabledChanged;
+        * /
+
+        public static readonly BindableProperty ScrollingEnabledProperty = BindableProperty.Create<AZScrollView, bool>(p => p.ScrollingEnabled, true);
+        public bool ScrollingEnabled
+        {
+            get { return (bool)GetValue(ScrollingEnabledProperty); }
+            set { SetValue(ScrollingEnabledProperty, value); }
+        }
+    }
+    */
+}

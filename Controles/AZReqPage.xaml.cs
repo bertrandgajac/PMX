@@ -59,6 +59,7 @@ namespace Controles
             m_btnsauver_ecran = new AZBoutonOnglet("+");
             m_btnsauver_ecran.m_bouton.Clicked += Btnsauver_ecran_Clicked;
             slbtn.Children.Add(m_btnsauver_ecran);
+            /*
             LabelStyle = new Style(typeof(Label))
             {
                 Setters =
@@ -66,6 +67,7 @@ namespace Controles
                     new Setter{Property=Label.FontSizeProperty,Value=20}
                 }
             };
+            */
             return true;
         }
         private void Btnstd_Clicked(object sender, EventArgs e)
@@ -118,7 +120,7 @@ namespace Controles
             double taille_textes = 20.0;
             foreach (DataRow dr_crit in dt_crit.Rows)
             {
-                grcriteres_req.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(40, GridUnitType.Absolute) });
+                grcriteres_req.RowDefinitions.Add(new RowDefinition() { Height = grcriteres_req.DonnerGridLength(40, AZGridUnitType.Absolute) });
                 int id_req_crit = Convert.ToInt32(dr_crit["id_req_crit"].ToString());
                 int id_type_req_crit = Convert.ToInt32(dr_crit["id_type_req_crit"].ToString());
                 string nom_type_req_crit = dr_crit["id_type_req_critWITH"].ToString();
@@ -128,7 +130,7 @@ namespace Controles
                 string nom_tab_si_combo = dr_crit["nom_tab_si_combo"].ToString();
                 ReqCrit rc = new ReqCrit(id_req_crit, id_type_req_crit, num_req_crit, nom_req_crit, req_crit_sql, nom_tab_si_combo);
                 m_liste_crit.Add(rc);
-                Label lblnom_crit = new Label();
+                AZLabel lblnom_crit = new AZLabel();
                 Grid.SetColumn(lblnom_crit, 0);
                 Grid.SetRow(lblnom_crit, num_lig);
                 lblnom_crit.Text = nom_req_crit;
@@ -136,29 +138,29 @@ namespace Controles
                 switch (nom_type_req_crit.ToLower())
                 {
                     case "booleen":
-                        Xamarin.Forms.Switch sw = new Xamarin.Forms.Switch();
+                        AZSwitch sw = new AZSwitch();
                         Grid.SetColumn(sw, 1);
                         Grid.SetRow(sw, num_lig);
                         sw.ClassId = num_req_crit.ToString();
                         grcriteres_req.Children.Add(sw);
                         break;
                     case "combo":
-                        AZComboCS cbo = new AZComboCS();
+                        string titre = num_req_crit.ToString();
+                        string nom_tab = dr_crit["nom_tab_si_combo"].ToString();
+                        string base_req = "select id_" + nom_tab + " as @id,dbo.fct_rep('" + nom_tab + "',id_" + nom_tab + ") as @lib from " + nom_tab + " order by 2";
+                        string base_filtre_lib = " and dbo.fct_rep('" + nom_tab + "',id_" + nom_tab + ") like '@valeur'";
+                        string base_filtre_id = " and id_" + nom_tab + "=@valeur";
+                        AZComboCS cbo = new AZComboCS((AZChamp)null, titre, base_req, base_filtre_lib, base_filtre_id);
                         Grid.SetColumn(cbo, 1);
                         Grid.SetRow(cbo, num_lig);
                         cbo.ClassId = num_req_crit.ToString();
-                        cbo.titre = num_req_crit.ToString();
-                        string nom_tab = dr_crit["nom_tab_si_combo"].ToString();
-                        cbo.base_req = "select id_" + nom_tab + " as @id,dbo.fct_rep('" + nom_tab + "',id_" + nom_tab + ") as @lib from " + nom_tab + " order by 2";
-                        cbo.base_filtre_lib = " and dbo.fct_rep('" + nom_tab + "',id_" + nom_tab + ") like '@valeur'";
-                        cbo.base_filtre_id = " and id_" + nom_tab + "=@valeur";
                         //                        cbo.taille_texte = taille_textes;
                         grcriteres_req.Children.Add(cbo);
                         break;
                     case "double":
                     case "entier":
                     case "chaine":
-                        Entry en = new Entry();
+                        AZEntry en = new AZEntry();
                         Grid.SetColumn(en, 1);
                         Grid.SetRow(en, num_lig);
                         en.ClassId = num_req_crit.ToString();
@@ -166,7 +168,7 @@ namespace Controles
                         grcriteres_req.Children.Add(en);
                         break;
                     case "date":
-                        DatePicker dp = new DatePicker();
+                        AZDatePicker dp = new AZDatePicker();
                         Grid.SetColumn(dp, 1);
                         Grid.SetRow(dp, num_lig);
                         dp.ClassId = num_req_crit.ToString();
@@ -209,9 +211,9 @@ namespace Controles
                             int num_crit = Convert.ToInt32(Uid);
                             if (num_crit == un_crit.m_num_req_crit)
                             {
-                                if (un_el is Xamarin.Forms.Switch)
+                                if (un_el is AZSwitch)
                                 {
-                                    Xamarin.Forms.Switch sw = (Xamarin.Forms.Switch)un_el;
+                                    AZSwitch sw = (AZSwitch)un_el;
                                     val = sw.IsToggled ? "1" : "0";
                                 }
                                 else if (un_el is AZComboCS)
@@ -223,14 +225,14 @@ namespace Controles
                                         val = id.Value.ToString();
                                     }
                                 }
-                                else if (un_el is Entry)
+                                else if (un_el is AZEntry)
                                 {
-                                    Entry tb = (Entry)un_el;
+                                    AZEntry tb = (AZEntry)un_el;
                                     val = tb.Text;
                                 }
-                                else if (un_el is DatePicker)
+                                else if (un_el is AZDatePicker)
                                 {
-                                    DatePicker dp = (DatePicker)un_el;
+                                    AZDatePicker dp = (AZDatePicker)un_el;
                                     val = dp.Date.ToString();
                                 }
                                 if (val != null)
@@ -436,3 +438,4 @@ protected async void btnsortie_ecran_Clicked(object sender, EventArgs e)
         }
     }
 }
+

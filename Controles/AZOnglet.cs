@@ -80,7 +80,7 @@ namespace Controles
         {
             if (_btn != null)
             {
-                Button btn_tmp = _btn.m_bouton;
+                AZButton btn_tmp = _btn.m_bouton;
                 if (btn_tmp != null)
                 {
                     string nom_btn = btn_tmp.Text;
@@ -100,46 +100,46 @@ namespace Controles
             }
         }
     }
-    public class AZBoutonOnglet : Xamarin.Forms.Grid
+    public class AZBoutonOnglet : AZGrid
     {
         private const int largeur_trait = 2;
-        public Button m_bouton;
-        public BoxView m_gauche;
-        public BoxView m_droite;
-        public BoxView m_haut;
-        public BoxView m_bas;
+        public AZButton m_bouton;
+        public AZBoxView m_gauche;
+        public AZBoxView m_droite;
+        public AZBoxView m_haut;
+        public AZBoxView m_bas;
         public AZBoutonOnglet(string texte)
         {
             this.Padding = 0.0;
             this.Margin = 0.0;
             this.ColumnSpacing = 0.0;
             this.RowSpacing = 0.0;
-            this.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(largeur_trait, GridUnitType.Absolute) });
-            this.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-            this.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(largeur_trait, GridUnitType.Absolute) });
-            this.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(largeur_trait, GridUnitType.Absolute) });
-            this.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
-            this.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(largeur_trait, GridUnitType.Absolute) });
-            m_bouton = new Button();
+            this.ColumnDefinitions.Add(new ColumnDefinition() { Width = DonnerGridLength(largeur_trait, AZGridUnitType.Absolute) });
+            this.ColumnDefinitions.Add(new ColumnDefinition() { Width = DonnerGridLength(1, AZGridUnitType.Star) });
+            this.ColumnDefinitions.Add(new ColumnDefinition() { Width = DonnerGridLength(largeur_trait, AZGridUnitType.Absolute) });
+            this.RowDefinitions.Add(new RowDefinition() { Height = DonnerGridLength(largeur_trait, AZGridUnitType.Absolute) });
+            this.RowDefinitions.Add(new RowDefinition() { Height = DonnerGridLength(1, AZGridUnitType.Star) });
+            this.RowDefinitions.Add(new RowDefinition() { Height = DonnerGridLength(largeur_trait, AZGridUnitType.Absolute) });
+            m_bouton = new AZButton();
             m_bouton.Text = texte;
             m_bouton.FontSize = 10.0;
             Grid.SetColumn(m_bouton, 1);
             Grid.SetRow(m_bouton, 1);
-            m_gauche = new BoxView();
+            m_gauche = new AZBoxView();
             Grid.SetColumn(m_gauche, 0);
             Grid.SetRow(m_gauche, 0);
             Grid.SetRowSpan(m_gauche, 3);
             m_gauche.BackgroundColor = Color.Black;
-            m_droite = new BoxView();
+            m_droite = new AZBoxView();
             Grid.SetColumn(m_droite, 2);
             Grid.SetRow(m_droite, 0);
             Grid.SetRowSpan(m_droite, 3);
             m_droite.BackgroundColor = Color.Black;
-            m_haut = new BoxView();
+            m_haut = new AZBoxView();
             Grid.SetColumn(m_haut, 1);
             Grid.SetRow(m_haut, 0);
             m_haut.BackgroundColor = Color.Black;
-            m_bas = new BoxView();
+            m_bas = new AZBoxView();
             Grid.SetColumn(m_bas, 0);
             Grid.SetRow(m_bas, 2);
             Grid.SetColumnSpan(m_bas, 3);
@@ -154,18 +154,18 @@ namespace Controles
         public void Appuyer()
         {
             m_bouton.BackgroundColor = Color.White;
-            m_gauche.IsVisible = true;
-            m_droite.IsVisible = true;
-            m_haut.IsVisible = true;
-            m_bas.IsVisible = false;
+            m_gauche.Visible = true;
+            m_droite.Visible = true;
+            m_haut.Visible = true;
+            m_bas.Visible = false;
         }
         public void Relacher()
         {
             m_bouton.BackgroundColor = Color.LightGray;
-            m_gauche.IsVisible = false;
-            m_droite.IsVisible = false;
-            m_haut.IsVisible = false;
-            m_bas.IsVisible = true;
+            m_gauche.Visible = false;
+            m_droite.Visible = false;
+            m_haut.Visible = false;
+            m_bas.Visible = true;
         }
     }
 }

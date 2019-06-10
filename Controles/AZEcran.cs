@@ -13,7 +13,7 @@ using Xamarin.Forms.Xaml;
 
 namespace Controles
 {
-    public partial class AZEcran : ContentPage
+    public partial class AZEcran : AZContentPage
     {
         //        private ContentPage m_p;
         protected string m_nom_serveur = "";
@@ -33,13 +33,14 @@ namespace Controles
         protected const double m_taille_combo = 30.0;
         protected bool m_objet_courant_modifie = false;
         protected const string m_nb_ligs = "nb_lig";
+        protected double m_taille_textes;
+        protected int m_id_AZecr;
+        /*
         protected bool m_avec_redim = true;
         protected const int m_nb_max_champs_formulaire = 999;
         protected const int m_nb_max_champs_grille = 999;
         protected const bool m_avec_grid_splitter = false;
         protected const int m_largeur_grid_splitter = 20;
-        protected int m_id_AZecr;
-        /*
         protected AZBlocDonnees m_criteres_recherche;
         protected List<AZChampCritere> m_lc_criteres;
         protected List<AZOnglet> m_onglets;
@@ -54,6 +55,7 @@ namespace Controles
         public DataTable dt_criteres { get { return m_dtcriteres; } }
         */
         public string nom_table_principale { get { return m_nom_table_principale; } set { m_nom_table_principale = value; } }
+        public double taille_textes { get { return m_taille_textes; } }
         //        public ContentPage p { get { return m_p; } }
         public Style LabelStyle;
 
@@ -61,7 +63,7 @@ namespace Controles
         {
 
         }
-        public virtual void Init(string _nom_serveur, string _nom_bd, int _mode_generation, string _nom_ecran, List<string> _lst_nom_tab, bool _proc_avec_user, string _nom_champ_etat, int _lg_min_champ_ecran, int _lg_max_champ_ecran, bool _avec_redim)
+        public virtual void Init(string _nom_serveur, string _nom_bd, int _mode_generation, string _nom_ecran, List<string> _lst_nom_tab, bool _proc_avec_user, string _nom_champ_etat, int _lg_min_champ_ecran, int _lg_max_champ_ecran, double taille_textes)
         {
             m_nom_serveur = _nom_serveur;
             m_nom_bd = _nom_bd;
@@ -74,11 +76,15 @@ namespace Controles
             m_lg_min_champ_ecran = _lg_min_champ_ecran;
             m_lg_max_champ_ecran = _lg_max_champ_ecran;
             m_nom_table_principale = _lst_nom_tab[0];
-            m_avec_redim = _avec_redim;
+            //            m_avec_redim = _avec_redim;
+            m_taille_textes = taille_textes;
         }
         protected void RechercheNb(string msg)
         {
-            ((Label)this.FindByName("recherche_nb")).Text = msg;
+            //            ((Label)this.FindByName("recherche_nb")).Text = msg;
+            AZLabel el = (AZLabel)this.ChercherParNom("recherche_nb");
+            if (el is AZLabel)
+                el.Text = msg;
         }
         /*
         public virtual void Init(string _nom_serveur, string _nom_bd, int _mode_generation, string _nom_ecran, List<string> _lst_nom_tab, bool _proc_avec_user, string _nom_champ_etat, int _lg_min_champ_ecran, int _lg_max_champ_ecran, bool _avec_redim)
@@ -117,13 +123,6 @@ namespace Controles
         }
         protected virtual bool InitIHM()
         {
-            LabelStyle = new Style(typeof(Label))
-            {
-                Setters =
-                {
-                    new Setter{Property=Label.FontSizeProperty,Value=20}
-                }
-            };
             bool ret = false;
             RechercheNb("init2");
             //                ret = await ab.Attendre();
@@ -254,10 +253,10 @@ namespace Controles
         }
         protected void RendreBoutonVisible(string nom_bouton)
         {
-            Button btn = (Button)this.FindByName(nom_bouton);
+            AZButton btn = (AZButton)this.FindByName(nom_bouton);
             if (btn != null)
             {
-                ((Button)this.FindByName(nom_bouton)).IsVisible = true;
+                ((AZButton)this.FindByName(nom_bouton)).Visible = true;
             }
         }
         protected virtual async Task<string> Sauver()

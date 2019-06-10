@@ -90,7 +90,7 @@ namespace Controles
                         string cbo_req = dr["cbo_req"].ToString();
                         string cbo_filtre_lib = dr["cbo_filtre_lib"].ToString();
                         string cbo_filtre_id = dr["cbo_filtre_id"].ToString();
-                        AZChamp ch = new AZChamp(tc, entete, nom_champ, lg_champ, lg_champ_ecr, cbo_nom_tab_ref, cbo_req, cbo_filtre_id, cbo_filtre_lib, maj_champ, oblig, visible);
+                        AZChamp ch = new AZChamp(o.bd, tc, entete, nom_champ, lg_champ, lg_champ_ecr, cbo_nom_tab_ref, cbo_req, cbo_filtre_id, cbo_filtre_lib, maj_champ, oblig, visible);
                         o.bd.lc.Add(ch);
                     }
                 }
@@ -109,6 +109,7 @@ namespace Controles
         protected override bool InitIHM()
         {
             bool ret = base.InitIHM();
+            /*
             LabelStyle = new Style(typeof(Label))
             {
                 Setters =
@@ -116,6 +117,7 @@ namespace Controles
                     new Setter{Property=Label.FontSizeProperty,Value=20}
                 }
             };
+            */
             gspl.IsVisible = true;
             foreach (AZOnglet o in m_onglets)
             {
@@ -123,6 +125,10 @@ namespace Controles
                 this.recherche_nb.Text = "init2: " + o.bd.nom_table_bloc;
                 o.btn.m_bouton.Clicked += btnonglet_Clicked;
                 o.btn.m_bouton.ClassId = o.nom_onglet;
+                /*
+                Effect EffetTooltip = Effect.Resolve($"AZ.{nameof(AZTooltipEffect)}");
+                o.btn.Effects.Add(EffetTooltip);
+                */
                 btnonglets.Children.Add(o.btn);
                 Grid.SetRow(o.bd.sv, 1);
                 onglets.Children.Add(o.bd.sv);
@@ -216,10 +222,10 @@ namespace Controles
                             switch (c.type)
                             {
                                 case AZTypeDeChamp.Booleen:
-                                    ((Switch)c.champ_saisie).IsToggled = false;
+                                    ((AZSwitch)c.champ_saisie).IsToggled = false;
                                     if (dronglet[c.NomChampBD()].ToString().Length > 0)
                                     {
-                                        ((Switch)c.champ_saisie).IsToggled = ConvertirBool(dronglet[c.NomChampBD()].ToString());
+                                        ((AZSwitch)c.champ_saisie).IsToggled = ConvertirBool(dronglet[c.NomChampBD()].ToString());
                                     }
                                     break;
                                 case AZTypeDeChamp.ClePrimaire:
@@ -248,20 +254,20 @@ namespace Controles
                                     }
                                     break;
                                 case AZTypeDeChamp.Entier:
-                                    ((Entry)c.champ_saisie).Text = dronglet[c.NomChampBD()].ToString();
+                                    ((AZEntry)c.champ_saisie).Text = dronglet[c.NomChampBD()].ToString();
                                     break;
                                 case AZTypeDeChamp.Date:
                                     if (dronglet[c.NomChampBD()].ToString().Length > 0)
-                                        ((DatePicker)c.champ_saisie).Date = Convert.ToDateTime(dronglet[c.NomChampBD()].ToString());
+                                        ((AZDatePicker)c.champ_saisie).Date = Convert.ToDateTime(dronglet[c.NomChampBD()].ToString());
                                     break;
                                 case AZTypeDeChamp.Double:
-                                    ((Entry)c.champ_saisie).Text = dronglet[c.NomChampBD()].ToString();
+                                    ((AZEntry)c.champ_saisie).Text = dronglet[c.NomChampBD()].ToString();
                                     break;
                                 case AZTypeDeChamp.Guid:
                                     break;
                                 case AZTypeDeChamp.Texte:
                                     if (!c.NomChampBD().EndsWith("WITH"))
-                                        ((Entry)c.champ_saisie).Text = dronglet[c.NomChampBD()].ToString();
+                                        ((AZEntry)c.champ_saisie).Text = dronglet[c.NomChampBD()].ToString();
                                     break;
                                 default:
                                     await AfficherMessage("type de champ inconnu dans l'onglet " + o.bd.header);
@@ -303,7 +309,7 @@ namespace Controles
                                 val_bd1 = false;
                                 if (dronglet[c.NomChampBD()].ToString().Length > 0)
                                     val_bd1 = Convert.ToBoolean(dronglet[c.NomChampBD()].ToString());
-                                val_bd2 = ((Switch)c.champ_saisie).IsToggled;
+                                val_bd2 = ((AZSwitch)c.champ_saisie).IsToggled;
                                 if (val_bd1 != val_bd2)
                                 {
                                     dronglet[c.NomChampBD()] = val_bd2;
@@ -321,35 +327,35 @@ namespace Controles
                                 }
                                 break;
                             case AZTypeDeChamp.Entier:
-                                if (dronglet[c.NomChampBD()].ToString() != ((Entry)c.champ_saisie).Text)
+                                if (dronglet[c.NomChampBD()].ToString() != ((AZEntry)c.champ_saisie).Text)
                                 {
-                                    dronglet[c.NomChampBD()] = Convert.ToInt32(((Entry)c.champ_saisie).Text);
+                                    dronglet[c.NomChampBD()] = Convert.ToInt32(((AZEntry)c.champ_saisie).Text);
                                     modifie = true;
                                 }
                                 break;
                             case AZTypeDeChamp.Date:
                                 if (dronglet[c.NomChampBD()].ToString().Length > 0)
                                 {
-                                    if (Convert.ToDateTime(dronglet[c.NomChampBD()].ToString()) != ((DatePicker)c.champ_saisie).Date)
+                                    if (Convert.ToDateTime(dronglet[c.NomChampBD()].ToString()) != ((AZDatePicker)c.champ_saisie).Date)
                                     {
-                                        dronglet[c.NomChampBD()] = Convert.ToDateTime(((DatePicker)c.champ_saisie).Date);
+                                        dronglet[c.NomChampBD()] = Convert.ToDateTime(((AZDatePicker)c.champ_saisie).Date);
                                         modifie = true;
                                     }
                                 }
                                 break;
                             case AZTypeDeChamp.Double:
-                                if (dronglet[c.NomChampBD()].ToString() != ((Entry)c.champ_saisie).Text)
+                                if (dronglet[c.NomChampBD()].ToString() != ((AZEntry)c.champ_saisie).Text)
                                 {
-                                    dronglet[c.NomChampBD()] = Convert.ToDouble(((Entry)c.champ_saisie).Text);
+                                    dronglet[c.NomChampBD()] = Convert.ToDouble(((AZEntry)c.champ_saisie).Text);
                                     modifie = true;
                                 }
                                 break;
                             case AZTypeDeChamp.Guid:
                                 break;
                             case AZTypeDeChamp.Texte:
-                                if (dronglet[c.NomChampBD()].ToString() != ((Entry)c.champ_saisie).Text)
+                                if (dronglet[c.NomChampBD()].ToString() != ((AZEntry)c.champ_saisie).Text)
                                 {
-                                    dronglet[c.NomChampBD()] = ((Entry)c.champ_saisie).Text;
+                                    dronglet[c.NomChampBD()] = ((AZEntry)c.champ_saisie).Text;
                                     modifie = true;
                                 }
                                 break;
@@ -534,7 +540,7 @@ namespace Controles
             Attente(true);
             try
             {
-                Button btn = (Button)sender;
+                AZButton btn = (AZButton)sender;
                 string nom_onglet = btn.ClassId;
                 if (nom_onglet == m_onglet_actif)
                     return;
@@ -558,6 +564,7 @@ namespace Controles
                 Attente(false);
             }
         }
+        /*
         private void ToucherOngletCourant(bool toucher)
         {
             AZOnglet o = TrouverOnglet();
@@ -566,7 +573,7 @@ namespace Controles
                 AZBoutonOnglet bouton = o.btn;
                 if (bouton != null)
                 {
-                    Button btn = o.btn.m_bouton;
+                    AZButton btn = o.btn.m_bouton;
                     if (btn != null)
                     {
                         string nom_btn = btn.Text;
@@ -586,6 +593,7 @@ namespace Controles
                 }
             }
         }
+        */
         protected override async Task<bool> MemoriserDefinitionEcran()
         {
             bool ret = await base.MemoriserDefinitionEcran();
@@ -665,6 +673,32 @@ namespace Controles
             catch (Exception ex)
             {
                 await AfficherException(ex);
+            }
+        }
+        /*
+        protected virtual string PreparerSqlPourComboboxDetail(DataRow dr, string nom_grille, string nom_champ)
+        {
+            return "";
+        }
+        */
+        public virtual string PreparerSqlPourComboboxDetail(AZComboCS cbo, AZGrid g)
+        {
+            return "";
+        }
+        public void SupprimerTooltips(object sender, System.EventArgs e)
+        {
+            foreach (var c in LayoutRoot.Children)
+            {
+                switch (c.GetType())
+                {
+                    default:
+                        if (AZTooltipEffect.GetHasTooltip(c))
+                        {
+                            AZTooltipEffect.SetHasTooltip(c, false);
+                            AZTooltipEffect.SetHasTooltip(c, true);
+                        }
+                        break;
+                }
             }
         }
     }

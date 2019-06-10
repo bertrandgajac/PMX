@@ -18,88 +18,63 @@ namespace PMX
             int mode_generation = 3;
             int lg_min_champ_ecran = 50;
             int lg_max_champ_ecran = 150;
-            bool avec_redim = true;
-            //            string nom_classe_ecran = "bcr";
-            //            string nom_cle_primaire = "id_chassis";
-            /*
-                        List<string> lst_nom_tab = new List<string>();
-                        lst_nom_tab.Add("chassis");
-                        lst_nom_tab.Add("platine");
-            */
             bool proc_avec_user = false;
             string nom_champ_etat = "Mode";
-            /*
-            List<string> lst_nom_tab = new List<string>() { "chassis", "platine" };
-            string sql_recherche = "select @top * from v_chassis_recherche where 1=1 @critere";
-            */
-            //            List<string> lst_nom_tab = new List<string>() { "cab", "cab_form", "cab_comm", "cab_lg", "cab_itin_terme", "cab_itin_terme_d", "cab_itin_synt", "cab_itin", "cab_hist", "cab_fonct", "mcc", "cab_vol_feu_mcc", "cab_of", "cab_itin_terme_of" };
+            double taille_textes = 15.0;
             List<string> lst_nom_tab = new List<string>() { "prs", "trv", "prs_off", "prs_doc" };
             //            string sql_recherche = "select @top T.id_prs,T.nom_prs,T.prenom_prs,T.id_loge,l.nom_loge as id_logeWITH,T.id_deg_bl,d.nom_deg as id_deg_blWITH,T.ad_elec,T.id_etat_prs,e.etat_prs as id_etat_prsWITH FROM prs T inner join loge l on T.id_loge=l.id_loge inner join deg d on T.id_deg_bl=d.id_deg inner join etat_prs e on T.id_etat_prs=e.id_etat_prs WHERE 1=1 @critere ORDER BY nom_prs,prenom_prs";
 
             string nom_ecran = "Membres";
-            Init(nom_serveur, nom_bd, mode_generation, nom_ecran, lst_nom_tab, proc_avec_user, nom_champ_etat, lg_min_champ_ecran, lg_max_champ_ecran, avec_redim);
+            Init(nom_serveur, nom_bd, mode_generation, nom_ecran, lst_nom_tab, proc_avec_user, nom_champ_etat, lg_min_champ_ecran, lg_max_champ_ecran, taille_textes);
             //        MainPage = new NavigationPage(new Controles.AZEcranComplexe(nom_serveur,nom_bd,mode_generation,lst_nom_tab,sql_recherche,proc_avec_user,nom_champ_etat,lg_min_champ_ecran,lg_max_champ_ecran));
-            /*
-            AccesBdClient.AccesBdClient ab = new AccesBdClient.AccesBdClient();
-            await ab.DefinirServeur(nom_serveur);
-            await ab.DefinirBd(nom_bd);
-            await Navigation.PushAsync(new PrsPage(nom_serveur, nom_bd, mode_generation, nom_ecran, lst_nom_tab, sql_recherche, proc_avec_user, nom_champ_etat, lg_min_champ_ecran, lg_max_champ_ecran, avec_redim));
-            */
         }
-        /*
-        public override async Task<bool> Rechercher()
+        public override string PreparerSqlPourComboboxDetail(AZComboCS cbo, AZGrid g)
         {
-            if (!((App)Application.Current).LoginFait())
+            string sql = "";
+            AZChamp champ = cbo.champ;
+            string nom_onglet = champ.bloc_donnees.nom_table_bloc;
+            switch(nom_onglet)
             {
-                await Navigation.PushAsync(new DebutPage());
-            }
-            else
-            {
-                bool ret = await base.Rechercher();
-            }
-            return true;
-        }
-        */
-        /*
-        public PrsPage(string _nom_serveur, string _nom_bd, int _mode_generation, string _nom_ecran, List<string> _lst_nom_tab, string _sql_recherche, bool _proc_avec_user, string _nom_champ_etat, int _lg_min_champ_ecran, int _lg_max_champ_ecran, bool _avec_redim)
-        : base(_nom_serveur, _nom_bd, _mode_generation, _nom_ecran, _lst_nom_tab, _sql_recherche, _proc_avec_user, _nom_champ_etat, _lg_min_champ_ecran, _lg_max_champ_ecran, _avec_redim)
-        {
-
-        }
-        */
-        /*
-        protected override string PreparerCriteres(DataRow dr)
-        {
-            string crit_sql = base.PreparerCriteres(dr);
-            if(dr.Table.Columns.Contains("actif"))
-            {
-                string str_actif = dr["actif"].ToString();
-                if (str_actif.Length > 0)
-                {
-                    bool actif = Convert.ToBoolean(str_actif);
-                    if (actif)
+                case "prs":
+                    break;
+                case "trv":
+                    switch (champ.nom_champ)
                     {
-                        crit_sql = crit_sql.Replace(" and actif = 1", " and id_etat_prs=1");
+                        case "id_tenue":
+                            AZComboCS cboid_loge = (AZComboCS)g.Children[1];
+                            int? id_loge = cboid_loge.CboId;
+                            if (id_loge.HasValue)
+                            {
+                                sql = cbo.base_req.Replace("1=1", "1=1 and id_loge=" + id_loge.Value.ToString());
+                            }
+                            break;
                     }
-                    else
+                    break;
+                case "prs_off":
+                    switch (champ.nom_champ)
                     {
-                        crit_sql = crit_sql.Replace(" and actif = 0", "");
+                        case "id_tenue_deb":
+                            AZComboCS cboid_loge = (AZComboCS)g.Children[1];
+                            int? id_loge = cboid_loge.CboId;
+                            if(id_loge.HasValue)
+                            {
+                                sql = cbo.base_req.Replace("1=1", "1=1 and id_loge=" + id_loge.Value.ToString());
+                            }
+                            break;
+                        case "id_tenue_fin":
+                            AZComboCS cboid_tenue_deb = (AZComboCS)g.Children[3];
+                            int? id_tenue_deb = cboid_tenue_deb.CboId;
+                            if (id_tenue_deb.HasValue)
+                            {
+                                sql = cbo.base_req.Replace("1=1", "1=1 and id_tenue in (select t1.id_tenue from tenue t1 inner join tenue t2 on t1.id_loge=t2.id_loge and t1.date_tenue>t2.date_tenue and t2.id_tenue=" + id_tenue_deb.Value.ToString() + ")");
+                            }
+                            break;
                     }
-                }
-                else
-                {
-                    crit_sql = crit_sql.Replace(" and actif = 0", "");
-                }
+                    break;
+                case "prs_doc":
+                    break;
             }
-            return crit_sql;
+            return sql;
         }
-        private async void Login()
-        {
-            if (!((App)Application.Current).LoginFait())
-            {
-                await Navigation.PushAsync(new DebutPage());
-            }
-        }
-        */
     }
 }

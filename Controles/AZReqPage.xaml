@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:controles="clr-namespace:Controles;assembly=Controles"
              x:Class="Controles.AZReqPage">
-    <ContentPage.Resources>
+    <!--ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="EntryTexteStyle" TargetType="Entry">
                 <Setter Property="FontSize" Value="Default"></Setter>
@@ -34,9 +34,9 @@
                 <Setter Property="SeparatorColor" Value="Black"></Setter>
             </Style>
         </ResourceDictionary>
-    </ContentPage.Resources>
+    </ContentPage.Resources-->
     <ContentPage.Content>
-        <Grid x:Name="LayoutRoot" BackgroundColor="White" Padding="0">
+        <controles:AZGrid x:Name="LayoutRoot" BackgroundColor="White" Padding="0">
             <Grid.RowDefinitions>
                 <!-- message d'erreur et signal d'attente -->
                 <RowDefinition Height="55"></RowDefinition>
@@ -46,20 +46,20 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <!--message d'erreur et signal d'attente -->
-            <ListView Grid.Row="0" x:Name="dgattente" Style="{StaticResource ListViewStyle}">
+            <ListView Grid.Row="0" x:Name="dgattente" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Label Text="{Binding ItemArray[0]}" TextColor="Red" Style="{StaticResource LabelTexteStyle}" />
+                            <controles:AZLabel Text="{Binding ItemArray[0]}" TextColor="Red"  />
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <StackLayout Grid.Row="1" x:Name="slbtn" Orientation="Horizontal" Spacing="0">
-                <Button x:Name="btninit" Clicked="Btninit_Clicked" Text="Init"></Button>
-            </StackLayout>
+            <controles:AZStackLayout Grid.Row="1" x:Name="slbtn" Orientation="Horizontal" Spacing="0">
+                <controles:AZButton x:Name="btninit" Clicked="Btninit_Clicked" Text="Init"></controles:AZButton>
+            </controles:AZStackLayout>
             <!-- requetes standard -->
-            <Grid Grid.Row="2" IsVisible="False" x:Name="tbstd">
+            <controles:AZGrid Grid.Row="2" IsVisible="False" x:Name="tbstd">
                 <Grid.RowDefinitions>
                     <!-- 0: boutons ligne du haut -->
                     <RowDefinition Height="35"></RowDefinition>
@@ -75,33 +75,33 @@
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <!-- Grid.Row 0: boutons standards -->
-                <StackLayout Grid.Row="0" Orientation="Horizontal">
-                    <Button x:Name="btnrecherche" Clicked="btnrecherche_Clicked" Text="Rechercher"></Button>
-                    <Button x:Name="btnvider_crit" Clicked="btnvider_crit_Clicked" Text="Vider critères"></Button>
-                    <Label  x:Name="recherche_nb" ></Label>
-                </StackLayout>
+                <controles:AZStackLayout Grid.Row="0" Orientation="Horizontal">
+                    <controles:AZButton x:Name="btnrecherche" Clicked="btnrecherche_Clicked" Text="Rechercher"></controles:AZButton>
+                    <controles:AZButton x:Name="btnvider_crit" Clicked="btnvider_crit_Clicked" Text="Vider critères"></controles:AZButton>
+                    <controles:AZLabel  x:Name="recherche_nb" ></controles:AZLabel>
+                </controles:AZStackLayout>
                 <!-- Grid.Row 1: grille de criteres et recherche -->
                 <!-- Grid.Row 2: GridSplitter -->
                 <controles:AZGridSplitter Grid.Row="2" HorizontalOptions="Fill" BackgroundColor="LightGray" />
                 <!-- Grid.Row 3: parametres de la requete courante-->
-                <ScrollView Grid.Row="3" Orientation="Both">
-                    <StackLayout Orientation="Vertical">
-                        <Grid x:Name="grcriteres_req">
+                <controles:AZScrollView Grid.Row="3" Orientation="Both">
+                    <controles:AZStackLayout Orientation="Vertical">
+                        <controles:AZGrid x:Name="grcriteres_req">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                        </Grid>
-                        <Button Text="Exécuter" x:Name="btnexec_req" Clicked="Btnexec_req_Clicked"></Button>
-                    </StackLayout>
-                </ScrollView>
+                        </controles:AZGrid>
+                        <controles:AZButton Text="Exécuter" x:Name="btnexec_req" Clicked="Btnexec_req_Clicked"></controles:AZButton>
+                    </controles:AZStackLayout>
+                </controles:AZScrollView>
                 <!-- Grid.Row 4: GridSplitter -->
                 <controles:AZGridSplitter Grid.Row="4" HorizontalOptions="Fill" BackgroundColor="LightGray"/>
                 <!-- Grid.Row 5: grille de résultat -->
                 <ScrollView Grid.Row="5" Orientation="Horizontal" x:Name="svreq_resultat"></ScrollView>
-            </Grid>
+            </controles:AZGrid>
             <!-- requetes specifiques -->
-            <Grid Grid.Row="2" IsVisible="False" x:Name="tbspec">
+            <controles:AZGrid Grid.Row="2" IsVisible="False" x:Name="tbspec">
                 <Grid.RowDefinitions>
                     <!-- requete -->
                     <RowDefinition Height="35"></RowDefinition>
@@ -115,12 +115,12 @@
                         <ColumnDefinition Width="100"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" Text="SQL" ></Label>
-                    <Entry Grid.Row="0" Grid.Column="1" x:Name="txtsql_spec" FontSize="15.0"></Entry>
+                    <controles:AZLabel Grid.Row="0" Grid.Column="0" Text="SQL" ></controles:AZLabel>
+                    <controles:AZEntry Grid.Row="0" Grid.Column="1" x:Name="txtsql_spec" FontSize="15.0"></controles:AZEntry>
                 </Grid>
-                <Button Grid.Row="1" Text="Exécuter" x:Name="btnexec_req_spec" Clicked="Btnexec_req_spec_Clicked"></Button>
+                <controles:AZButton Grid.Row="1" Text="Exécuter" x:Name="btnexec_req_spec" Clicked="Btnexec_req_spec_Clicked"></controles:AZButton>
                 <ScrollView Grid.Row="2" Orientation="Horizontal" x:Name="svreq_spec_resultat"></ScrollView>
-            </Grid>
-        </Grid>
+            </controles:AZGrid>
+        </controles:AZGrid>
     </ContentPage.Content>
 </controles:AZEcranRecherche>

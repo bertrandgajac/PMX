@@ -3,11 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Controles.AZVoirImagePage">
     <ContentPage.Content>
-        <StackLayout x:Name="ImageLayout">
-            <Button x:Name="fin" Text="OK" Clicked="fin_Clicked"></Button>
+        <Grid x:Name="ImageLayout">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" x:Name="fin" Text="OK" Clicked="fin_Clicked"></Button>
             <!--Image x:Name="image" Aspect="Fill" Source="https://www.xamarin.com/content/images/pages/forms/example-app.png"></Image-->
-            <Image x:Name="image"></Image>
-            <Label Text="Fin de l'image"></Label>
-        </StackLayout>
+            <Image Grid.Row="1" x:Name="image" Aspect="AspectFill"></Image>
+            <!--Label Text="Fin de l'image"></Label-->
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

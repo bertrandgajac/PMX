@@ -19,13 +19,13 @@ namespace Controles
         public AZDebutPage()
         {
             InitializeComponent();
-            cboid_prs = new AZComboCS();
+            string titre = "Login";
+            string base_req = "select @top id_prs as @id,dbo.fct_rep('prs',id_prs) as @lib from prs where 1=1 order by 2";
+            string base_filtre_lib = " and dbo.fct_rep('prs',id_prs) like '@valeur'";
+            string base_filtre_id = " and id_prs like @valeur";
+            cboid_prs = new AZComboCS((AZChamp)null, titre, base_req, base_filtre_lib, base_filtre_id);
             Grid.SetColumn(cboid_prs, 1);
             Grid.SetRow(cboid_prs, 1);
-            cboid_prs.titre = "Login";
-            cboid_prs.base_req = "select @top id_prs as @id,dbo.fct_rep('prs',id_prs) as @lib from prs where 1=1 order by 2";
-            cboid_prs.base_filtre_lib = " and dbo.fct_rep('prs',id_prs) like '@valeur'";
-            cboid_prs.base_filtre_id = " and id_prs like @valeur";
             cboid_prs.taille_texte = 15.0;
             grlogin.Children.Add(cboid_prs);
         }

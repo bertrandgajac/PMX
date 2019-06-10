@@ -18,7 +18,7 @@ namespace PMX
             int mode_generation = 3;
             int lg_min_champ_ecran = 50;
             int lg_max_champ_ecran = 150;
-            bool avec_redim = true;
+//            bool avec_redim = true;
             //            string nom_classe_ecran = "bcr";
             //            string nom_cle_primaire = "id_chassis";
             /*
@@ -28,6 +28,7 @@ namespace PMX
             */
             bool proc_avec_user = false;
             string nom_champ_etat = "Mode";
+            double taille_textes = 15.0;
             /*
             List<string> lst_nom_tab = new List<string>() { "chassis", "platine" };
             string sql_recherche = "select @top * from v_chassis_recherche where 1=1 @critere";
@@ -39,7 +40,7 @@ namespace PMX
             //            string sql_recherche = "select @top l.id_loge,l.nom_loge as Loge,nom_obed as Obédience,nom_orient as Orient,num_loge as Numéro,lib_type_loge as Type FROM loge l,obed o,orient,type_loge tl where 1=1 and l.id_obed=o.id_obed and l.id_orient=orient.id_orient and l.id_type_loge=tl.id_type_loge ORDER BY nom_loge";
 
             string nom_ecran = "Loges";
-            Init(nom_serveur, nom_bd, mode_generation, nom_ecran, lst_nom_tab, proc_avec_user, nom_champ_etat, lg_min_champ_ecran, lg_max_champ_ecran, avec_redim);
+            Init(nom_serveur, nom_bd, mode_generation, nom_ecran, lst_nom_tab, proc_avec_user, nom_champ_etat, lg_min_champ_ecran, lg_max_champ_ecran, taille_textes);
             //        MainPage = new NavigationPage(new Controles.AZEcranComplexe(nom_serveur,nom_bd,mode_generation,lst_nom_tab,sql_recherche,proc_avec_user,nom_champ_etat,lg_min_champ_ecran,lg_max_champ_ecran));
             /*
             AccesBdClient.AccesBdClient ab = new AccesBdClient.AccesBdClient();

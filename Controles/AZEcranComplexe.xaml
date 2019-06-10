@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:controles="clr-namespace:Controles;assembly=Controles"
              x:Class="Controles.AZEcranComplexe">
-    <ContentPage.Resources>
+    <!--ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="EntryTexteStyle" TargetType="Entry">
                 <Setter Property="FontSize" Value="Default"></Setter>
@@ -29,14 +29,14 @@
                 <Setter Property="VerticalOptions" Value="Center"></Setter>
             </Style>
             <Style x:Key="ListViewStyle" TargetType="ListView">
-                <!--Setter Property="RowHeight" Value="50"></Setter-->
+                <! - - Setter Property="RowHeight" Value="50"></Setter- - >
                 <Setter Property="SeparatorVisibility" Value="Default"></Setter>
                 <Setter Property="SeparatorColor" Value="Black"></Setter>
             </Style>
         </ResourceDictionary>
-    </ContentPage.Resources>
+    </ContentPage.Resources-->
     <ContentPage.Content>
-        <Grid x:Name="LayoutRoot" BackgroundColor="White" Padding="0">
+        <Grid x:Name="LayoutRoot" Padding="0">
             <Grid.RowDefinitions>
                 <!-- boutons menu rang 1 -->
                 <RowDefinition Height="35"></RowDefinition>
@@ -45,29 +45,32 @@
                 <!-- grilles de criteres et recherche  -->
                 <RowDefinition Height="*"></RowDefinition>
                 <!-- splitter -->
-                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="20"></RowDefinition>
                 <!-- onglets -->
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
+            <!--Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="SupprimerTooltips"></TapGestureRecognizer>
+            </Grid.GestureRecognizers-->
             <!-- premiere rangee de boutons -->
             <ScrollView Grid.Row="0" Orientation="Horizontal" Margin="0" Padding="0" >
-                <StackLayout Orientation="Horizontal" Margin="0" Padding="0" >
-                    <Button x:Name="btnrecherche" Clicked="btnrecherche_Clicked" Text="Init" Style="{StaticResource ButtonTexteStyle}"></Button>
-                    <Button x:Name="btnvider_crit" Clicked="btnvider_crit_Clicked" Text="X" WidthRequest="30" Style="{StaticResource ButtonTexteStyle}" IsVisible="False" ></Button>
-                    <Label x:Name="recherche_nb" FontSize="Large" Style="{StaticResource LabelTexteStyle}" ></Label>
-                    <Button x:Name="btncreer" Clicked="btncreer_Clicked" Text="Créer" Style="{StaticResource ButtonTexteStyle}" IsVisible="False" ></Button>
-                    <Button x:Name="btnsauver" Clicked="btnsauver_Clicked" Text="Sauver" Style="{StaticResource ButtonTexteStyle}" IsVisible="False" ></Button>
-                    <Button x:Name="btnsupprimer" Clicked="btnsupprimer_Clicked" Text="Supprimer" Style="{StaticResource ButtonTexteStyle}" IsVisible="False" ></Button>
-                    <Button x:Name="btnsauver_ecran" Clicked="btnsauver_ecran_Clicked" Text="+" WidthRequest="30" Style="{StaticResource ButtonTexteStyle}" IsVisible="False" ></Button>
+                <controles:AZStackLayout Orientation="Horizontal" Margin="0" Padding="0" >
+                    <controles:AZButton x:Name="btnrecherche" Clicked="btnrecherche_Clicked" Text="Init" ></controles:AZButton>
+                    <controles:AZButton x:Name="btnvider_crit" Clicked="btnvider_crit_Clicked" Text="X" IsVisible="False" ></controles:AZButton>
+                    <controles:AZLabel x:Name="recherche_nb"  ></controles:AZLabel>
+                    <controles:AZButton x:Name="btncreer" Clicked="btncreer_Clicked" Text="Créer"  IsVisible="False" ></controles:AZButton>
+                    <controles:AZButton x:Name="btnsauver" Clicked="btnsauver_Clicked" Text="Sauver" IsVisible="False" ></controles:AZButton>
+                    <controles:AZButton x:Name="btnsupprimer" Clicked="btnsupprimer_Clicked" Text="Supprimer" IsVisible="False" ></controles:AZButton>
+                    <controles:AZButton x:Name="btnsauver_ecran" Clicked="btnsauver_ecran_Clicked" Text="+" IsVisible="False" ></controles:AZButton>
                     <!--Button x:Name="btnsortie_ecran" Clicked="btnsortie_ecran_Clicked" Text="-" WidthRequest="30" Style="{StaticResource ButtonTexteStyle}" IsVisible="False" ></Button -->
-                </StackLayout>
+                </controles:AZStackLayout>
             </ScrollView>
             <!--message d'erreur et signal d'attente -->
-            <ListView Grid.Row="1" x:Name="dgattente" Style="{StaticResource ListViewStyle}">
+            <ListView Grid.Row="1" x:Name="dgattente" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Label Text="{Binding ItemArray[0]}" TextColor="Red" Style="{StaticResource LabelTexteStyle}" />
+                            <controles:AZLabel Text="{Binding ItemArray[0]}" TextColor="Red" />
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -80,8 +83,8 @@
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <ScrollView Grid.Row="0" Orientation="Horizontal">
-                    <StackLayout Orientation="Horizontal" x:Name="btnonglets" Spacing="0">
-                        <Grid ColumnSpacing="0" RowSpacing="0">
+                    <controles:AZStackLayout Orientation="Horizontal" x:Name="btnonglets" Spacing="0">
+                        <!--Grid ColumnSpacing="0" RowSpacing="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -90,11 +93,11 @@
                                 <RowDefinition Height="*"></RowDefinition>
                                 <RowDefinition Height="2"></RowDefinition>
                             </Grid.RowDefinitions>
-                            <Button Grid.Column="0" Grid.Row="0" Text="A" WidthRequest="30" x:Name="btnhaut" Clicked="btnhaut_Clicked" IsVisible="False" FontSize="10"></Button>
-                            <Button Grid.Column="1" Grid.Row="0" Text="V" WidthRequest="30" x:Name="btnbas" Clicked="btnbas_Clicked" IsVisible="False" FontSize="10"></Button>
-                            <BoxView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Color="Black"></BoxView>
-                        </Grid>
-                    </StackLayout>
+                            <controles:AZButton Grid.Column="0" Grid.Row="0" Text="A" WidthRequest="30" x:Name="btnhaut" Clicked="btnhaut_Clicked" IsVisible="False" FontSize="10"></controles:AZButton>
+                            <controles:AZButton Grid.Column="1" Grid.Row="0" Text="V" WidthRequest="30" x:Name="btnbas" Clicked="btnbas_Clicked" IsVisible="False" FontSize="10"></controles:AZButton>
+                            <controles:AZBoxView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Color="Black"></controles:AZBoxView>
+                        </Grid-->
+                    </controles:AZStackLayout>
                 </ScrollView>
             </Grid>
         </Grid>

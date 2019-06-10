@@ -8,10 +8,11 @@ using Xamarin.Forms;
 
 namespace Controles
 {
-    public class AZGridSplitter : BoxView // TemplatedView
+    public class AZGridSplitter : AZBoxView // TemplatedView
     {
         public AZEcran m_p;
         public AZBlocDonnees m_bloc;
+        //        private double m_x_sv;
         static PropertyInfo RowDefinitionActualHeightProperty;
         static PropertyInfo ColumnDefinitionActualWidthProperty;
         public AZGridSplitter() : base()
@@ -48,7 +49,15 @@ namespace Controles
         {
             if (m_bloc != null)
             {
+                /*
+                m_x_sv = m_bloc.sv.ScrollX;
                 m_bloc.sv.Orientation = ScrollOrientation.Vertical;
+                m_bloc.sv.TranslationX = -m_x_sv;
+                m_bloc.sv.IsClippedToBounds = false;
+//                m_bloc.sv.IsEnabled = false;
+                */
+                m_bloc.sv.IsEnabled = false;
+                m_bloc.sv.InputTransparent = true;
             }
         }
         public void FinMouvement()
@@ -56,7 +65,10 @@ namespace Controles
             if (m_bloc != null)
             {
                 m_bloc.DeplacerFrontiereVerticale(ClassId, 0, true);
-                m_bloc.sv.Orientation = ScrollOrientation.Horizontal;
+                //                m_bloc.sv.Orientation = ScrollOrientation.Horizontal;
+                //m_bloc.sv.IsEnabled = true;
+                m_bloc.sv.IsEnabled = true;
+                m_bloc.sv.InputTransparent = false;
             }
         }
         public void Mouvement(double dragOffsetX, double dragOffsetY)
@@ -100,10 +112,13 @@ namespace Controles
             }
             RowDefinition rowAbove = grid.RowDefinitions[row - 1];
             var actualHeight = GetRowDefinitionActualHeight(rowAbove) + offsetY;
+            double max_height = 500.0;
             if (actualHeight < 0)
             {
                 actualHeight = 0;
             }
+            else if (actualHeight > max_height)
+                actualHeight = max_height;
             rowAbove.Height = new GridLength(actualHeight);
         }
         private void UpdateColumn(double offsetX)
@@ -122,7 +137,7 @@ namespace Controles
             {
                 return;
             }
-            this.AnchorX += offsetX;
+            //            this.AnchorX += offsetX;
             ColumnDefinition columnLeft = grid.ColumnDefinitions[column - 1];
             double actualWidth = GetColumnDefinitionActualWidth(columnLeft) + offsetX;
             if (actualWidth < 0)
@@ -136,7 +151,7 @@ namespace Controles
                 //                m_bloc.lc[num_champ].lg_champ_ecran = (int)(actualWidth + 0.5);
                 int offset = offsetX > 0.0 ? (int)(0.5 + offsetX) : (int)(-0.5 + offsetX);
                 m_bloc.DeplacerFrontiereVerticale(ClassId, offset, false);
-//                m_bloc.sv.Orientation = ScrollOrientation.Horizontal;
+                //                m_bloc.sv.Orientation = ScrollOrientation.Horizontal;
             }
         }
         static private double GetRowDefinitionActualHeight(RowDefinition row)

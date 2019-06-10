@@ -23,13 +23,13 @@ namespace Controles
         protected DataTable m_dtcriteres;
         protected const int m_nb_max_lignes_recherche = 200;
         protected int m_id_courant = 0;
-        protected ListView m_dg_criteres;
+        protected AZListView m_dg_criteres;
         protected string m_nom_grid_criteres_recherche = "LayoutRoot";
         protected int m_num_row_criteres_recherche = 2;
 
         public List<AZChampCritere> lc_criteres { get { return m_lc_criteres; } set { m_lc_criteres = value; } }
         public DataTable dt_criteres { get { return m_dtcriteres; } }
-        public ListView dg_criteres { get { return m_dg_criteres; } set { m_dg_criteres = value; } }
+        public AZListView dg_criteres { get { return m_dg_criteres; } set { m_dg_criteres = value; } }
         public string nom_grid_criteres_recherche { get { return m_nom_grid_criteres_recherche; } set { m_nom_grid_criteres_recherche = value; } }
         public int num_row_criteres_recherche { get { return m_num_row_criteres_recherche; } set { m_num_row_criteres_recherche = value; } }
 
@@ -37,9 +37,9 @@ namespace Controles
         {
 
         }
-        public override void Init(string _nom_serveur, string _nom_bd, int _mode_generation, string _nom_ecran, List<string> _lst_nom_tab, bool _proc_avec_user, string _nom_champ_etat, int _lg_min_champ_ecran, int _lg_max_champ_ecran, bool _avec_redim)
+        public override void Init(string _nom_serveur, string _nom_bd, int _mode_generation, string _nom_ecran, List<string> _lst_nom_tab, bool _proc_avec_user, string _nom_champ_etat, int _lg_min_champ_ecran, int _lg_max_champ_ecran, double _taille_textes)
         {
-            base.Init(_nom_serveur, _nom_bd, _mode_generation, _nom_ecran, _lst_nom_tab, _proc_avec_user, _nom_champ_etat, _lg_min_champ_ecran, _lg_max_champ_ecran, _avec_redim);
+            base.Init(_nom_serveur, _nom_bd, _mode_generation, _nom_ecran, _lst_nom_tab, _proc_avec_user, _nom_champ_etat, _lg_min_champ_ecran, _lg_max_champ_ecran, _taille_textes);
             m_proc_recherche = "AZ" + m_lst_nom_tab[0] + "__recherche";
             m_sql_recherche = "exec " + m_proc_recherche + " 0 @criteres";
         }
@@ -83,11 +83,29 @@ namespace Controles
                     string cbo_filtre_lib = dr["cbo_filtre_lib"].ToString();
                     string cbo_filtre_id = dr["cbo_filtre_id"].ToString();
                     string clause_sql = dr["clause_sql"].ToString();
-                    AZChamp ch = new AZChamp(tc, entete, nom_champ, lg_champ, lg_champ_ecr, cbo_nom_tab_ref, cbo_req, cbo_filtre_id, cbo_filtre_lib, maj_champ, oblig, visible);
-                    //                    lcr.Add(ch);
-                    m_criteres_recherche.lc.Add(ch);
-                    AZChampCritere chc = new AZChampCritere(tc, entete, nom_champ, lg_champ, lg_champ_ecr, cbo_nom_tab_ref, cbo_req, cbo_filtre_id, cbo_filtre_lib, maj_champ, visible, clause_sql);
+//                    AZChamp ch = new AZChamp(m_criteres_recherche, tc, entete, nom_champ, lg_champ, lg_champ_ecr, cbo_nom_tab_ref, cbo_req, cbo_filtre_id, cbo_filtre_lib, maj_champ, oblig, visible);
+//                    m_criteres_recherche.lc.Add(ch);
+                    AZChampCritere chc = new AZChampCritere(m_criteres_recherche, tc, entete, nom_champ, lg_champ, lg_champ_ecr, cbo_nom_tab_ref, cbo_req, cbo_filtre_id, cbo_filtre_lib, maj_champ, visible, clause_sql);
                     m_lc_criteres.Add(chc);
+                }
+                sql = "select c.id_AZtype_champ,c.entete,c.nom_champ,c.lg_champ,c.lg_champ_ecr,c.maj,c.oblig,c.visible,c.dans_grille,c.cbo_nom_tab_ref,c.cbo_req,c.cbo_filtre_lib,c.cbo_filtre_id from AZchamp_rech cr inner join AZchamp c on cr.id_AZchamp=c.id_AZchamp where cr.id_AZecr=" + Formater(m_id_AZecr) + " order by cr.num_champ";
+                DataTable dt_champs_rech = await ab.LireTable(sql);
+                foreach (DataRow dr in dt_champs_rech.Rows)
+                {
+                    AZTypeDeChamp tc = (AZTypeDeChamp)Convert.ToInt32(dr["id_AZtype_champ"].ToString());
+                    string entete = dr["entete"].ToString();
+                    string nom_champ = dr["nom_champ"].ToString();
+                    int lg_champ = Convert.ToInt32(dr["lg_champ"].ToString());
+                    int lg_champ_ecr = Convert.ToInt32(dr["lg_champ_ecr"].ToString());
+                    bool maj_champ = Convert.ToBoolean(dr["maj"].ToString());
+                    bool oblig = Convert.ToBoolean(dr["oblig"].ToString());
+                    bool visible = Convert.ToBoolean(dr["visible"].ToString());
+                    string cbo_nom_tab_ref = dr["cbo_nom_tab_ref"].ToString();
+                    string cbo_req = dr["cbo_req"].ToString();
+                    string cbo_filtre_lib = dr["cbo_filtre_lib"].ToString();
+                    string cbo_filtre_id = dr["cbo_filtre_id"].ToString();
+                    AZChamp ch = new AZChamp(m_criteres_recherche, tc, entete, nom_champ, lg_champ, lg_champ_ecr, cbo_nom_tab_ref, cbo_req, cbo_filtre_id, cbo_filtre_lib, maj_champ, oblig, visible);
+                    m_criteres_recherche.lc.Add(ch);
                 }
                 //                ret = await MemoriserDefinitionEcran();
             }
@@ -102,7 +120,7 @@ namespace Controles
                     sql = "select count(*) from INFORMATION_SCHEMA.PARAMETERS where SPECIFIC_NAME='" + m_proc_recherche + "' and PARAMETER_NAME='@" + c.NomChampBD() + "'";
                     int? nb_maj = await ab.LireEntier(sql);
                     bool maj = nb_maj.Value > 0;
-                    AZChampCritere cc = new AZChampCritere(c.type, c.header, c.nom_champ, c.lg_champ, c.lg_champ_ecran, c.nom_tab_ref_pour_cbo, c.base_req, c.base_filtre_id, c.base_filtre_lib, maj, c.visible, clause_sql);
+                    AZChampCritere cc = new AZChampCritere(m_criteres_recherche, c.type, c.header, c.nom_champ, c.lg_champ, c.lg_champ_ecran, c.nom_tab_ref_pour_cbo, c.base_req, c.base_filtre_id, c.base_filtre_lib, maj, c.visible, clause_sql);
                     m_lc_criteres.Add(cc);
                 }                //                lcr = await GenererChamps("recherche", sql);
                 ret = await MemoriserDefinitionEcran();
@@ -118,7 +136,7 @@ namespace Controles
             m_criteres_recherche.nom_table_bloc = "criteres_recherche";
             GenererCriteres();
             m_criteres_recherche.InitIHM();
-            m_criteres_recherche.sv.IsVisible = true;
+            m_criteres_recherche.sv.Visible = true;
             m_criteres_recherche.dg.ItemsSource = null;
             m_criteres_recherche.dg.ItemSelected += dgrecherche_ItemSelected;
             Grid.SetRow(m_criteres_recherche.sv, m_num_row_criteres_recherche);
@@ -139,8 +157,11 @@ namespace Controles
                             if (dr[c.NomChampBD()] != null && dr[c.NomChampBD()].ToString().Length > 0)
                             {
                                 bool val_bool = Convert.ToBoolean(dr[c.NomChampBD()].ToString());
+                                /*
                                 if (val_bool)
                                     crit_sql += ",@" + c.NomChampBD() + " = 1";
+                                */
+                                crit_sql += ",@" + c.NomChampBD() + "=" + (val_bool ? "1" : "0");
                                 //                                crit_sql += " and " + c.NomChampBD() + " = 1";
                             }
                             break;
@@ -198,7 +219,8 @@ namespace Controles
                 if (!m_init_fait)
                 {
                     //                AfficherMessage("pas passé");
-                    ((Button)this.FindByName("btnrecherche")).IsEnabled = false;
+                    //                    ((Button)this.FindByName("btnrecherche")).IsEnabled = false;
+                    ((AZButton)this.ChercherParNom("btnrecherche")).IsEnabled = false;
                     ret = await Init1();
                     if (ret)
                     {
@@ -207,8 +229,10 @@ namespace Controles
                         {
                             m_init_fait = true;
                             //                        Rechercher();
-                            ((Button)this.FindByName("btnrecherche")).Text = "Rechercher";
-                            ((Button)this.FindByName("btnrecherche")).IsEnabled = true;
+                            //((Button)this.FindByName("btnrecherche")).Text = "Rechercher";
+                            //((Button)this.FindByName("btnrecherche")).IsEnabled = true;
+                            ((AZButton)this.ChercherParNom("btnrecherche")).Text = "Rechercher";
+                            ((AZButton)this.ChercherParNom("btnrecherche")).IsEnabled = true;
                             RendreBoutonVisible("btnvider_crit");
                             RendreBoutonVisible("btncreer");
                             RendreBoutonVisible("btnsauver");
@@ -283,7 +307,8 @@ namespace Controles
             }
             finally
             {
-                ((Button)this.FindByName("btnrecherche")).IsEnabled = true;
+                //                ((Button)this.FindByName("btnrecherche")).IsEnabled = true;
+                ((AZButton)this.ChercherParNom("btnrecherche")).IsEnabled = true;
                 Attente(false);
             }
             return ret;
