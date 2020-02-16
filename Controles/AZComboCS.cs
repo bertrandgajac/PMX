@@ -373,12 +373,11 @@ namespace Controles
             {
                 if(this.Parent is AZGrid)
                 {
-                    AZGrid g = (AZGrid)this.Parent;
                     if(m_champ != null)
                     {
                         if(m_champ.bloc_donnees != null)
                         {
-                            m_metier_req = m_champ.bloc_donnees.PreparerSqlPourComboboxDetail(this, g);
+                            m_metier_req = m_champ.bloc_donnees.PreparerSqlPourComboboxDetail(this);
                         }
                     }
                     /*
@@ -529,7 +528,10 @@ namespace Controles
             }
             if (!texte_correct)
             {
-                texte.Text = "[id=" + nouvel_id + "]";
+                if (nouvel_id.HasValue)
+                    texte.Text = "[id=" + nouvel_id + "]";
+                else
+                    texte.Text = "";
                 //                this.texte_affiche.Text = this.CboTexte;
             }
             texte.TextColor = texte_correct ? Color.Black : Color.Red;

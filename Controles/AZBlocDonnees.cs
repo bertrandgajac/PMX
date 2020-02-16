@@ -417,7 +417,7 @@ namespace Controles
                                     if (nom_tab_ref_pour_cbo.Length > 0)
                                     {
                                         base_req = "select @top id_" + nom_tab_ref_pour_cbo + " as @id,dbo.fct_rep('" + nom_tab_ref_pour_cbo + "',id_" + nom_tab_ref_pour_cbo + ") as @lib from " + nom_tab_ref_pour_cbo + " where 1=1 order by 2";
-                                        base_filtre_lib = " and dbo.fct_rep('" + nom_tab_ref_pour_cbo + "')='@valeur'";
+                                        base_filtre_lib = " and dbo.fct_rep('" + nom_tab_ref_pour_cbo + "',id_" + nom_tab_ref_pour_cbo + ")='@valeur'";
                                         base_filtre_id = " and id_" + nom_tab_ref_pour_cbo + "=@valeur";
                                     }
                                 }
@@ -467,19 +467,12 @@ namespace Controles
         }
         private ViewCell CreerItemTemplate(string prefixe, bool avec_boxview, List<AZChamp> liste_champs)
         {
-            int nb_max_champs_grille = 999;
+//            int nb_max_champs_grille = 999;
             double taille_textes = m_p.taille_textes;
-            //            bool avec_grid_splitter = false;
-            //            int largeur_grid_splitter = 10;
             ViewCell vc = null;
             try
             {
                 var gr = new AZGrid();
-                /*
-                Label lbl = new Label();
-                lbl.Text = "A";
-                gr.Children.Add(lbl);
-                */
                 int num_col = 0;
                 int num_champ = 0;
                 if (avec_boxview)
@@ -505,58 +498,6 @@ namespace Controles
                     AZChamp c = liste_champs[index_champ];
                     if (c.visible)
                     {
-                        /*
-                        if (m_avec_grid_splitter)
-                        {
-                            if (debut == false) // && avec_redim
-                            {
-                                gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(m_largeur_grid_splitter, GridUnitType.Absolute) });
-                                num_col++;
-                            }
-                        }
-                        */
-                        /*
-                        if (avec_redim)
-                        {
-                            if (debut == false) // && avec_redim
-                            {
-                                gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(5, GridUnitType.Absolute) });
-                                gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(5, GridUnitType.Absolute) });
-                                if (avec_redim_tmp)
-                                {
-                                    Button btn_gauche = new Button();
-                                    btn_gauche.Clicked += BtnGaucheClicked;
-                                    btn_gauche.ClassId = num_col.ToString();
-                                    btn_gauche.BackgroundColor = Color.DarkCyan;
-                                    Grid.SetColumn(btn_gauche, num_col);
-                                    gr.Children.Add(btn_gauche);
-                                }
-                                num_col++;
-                                if (avec_redim_tmp)
-                                {
-                                    Button btn_droite = new Button();
-                                    btn_droite.Clicked += BtnDroiteClicked;
-                                    btn_droite.ClassId = num_col.ToString();
-                                    btn_droite.BackgroundColor = Color.Chocolate;
-                                    Grid.SetColumn(btn_droite, num_col);
-                                    gr.Children.Add(btn_droite);
-                                }
-                                num_col++;
-                            }
-                        }
-                        */
-                        /*ABCD
-                        int lg_col = c.lg_champ_ecran;
-                        if (m_avec_grid_splitter)
-                            lg_col += m_largeur_grid_splitter;
-                        */
-                        /*
-                        if (num_col > 0 && m_avec_grid_splitter == true)
-                        {
-                            gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(m_largeur_grid_splitter, GridUnitType.Absolute) });
-                            num_col++;
-                        }
-                        */
                         int lg_col = c.lg_champ_ecran;
                         if (m_separation_colonnes == AZSeparationColonnes.Splitter)
                         {
@@ -571,13 +512,6 @@ namespace Controles
                             lg_col += delta_lg;
                         }
                         gr.ColumnDefinitions.Add(new ColumnDefinition() { Width = gr.DonnerGridLength(lg_col, AZGridUnitType.Absolute) });
-                        /*
-                        bool modif = c.maj;
-                        if (prefixe == "crit")
-                            modif = true;
-                        else if (prefixe == "rech")
-                            modif = false;
-                        */
                         bool modif = prefixe == "rech" ? false : c.maj;
                         bool colorer = false;
                         Color coul_fond = Color.White;
@@ -822,106 +756,6 @@ namespace Controles
             gr.Children.Add(btnplus);
             return gr;
         }
-        /*
-        private Grid MaGridGrandMere(Element el)
-        {
-            bool trouve = false;
-            bool fini = false;
-            while (!fini)
-            {
-                if (el is Grid)
-                {
-                    trouve = true;
-                    fini = true;
-                }
-                else if (el == null)
-                    fini = true;
-                else
-                {
-                    el = el.Parent;
-                }
-            }
-            if (!trouve)
-            {
-                el = null;
-            }
-            else
-            {
-                el = el.Parent;
-                trouve = false;
-                fini = false;
-                while (!fini)
-                {
-                    if (el is Grid)
-                    {
-                        trouve = true;
-                        fini = true;
-                    }
-                    else if (el == null)
-                        fini = true;
-                    else
-                    {
-                        el = el.Parent;
-                    }
-                }
-                if (!trouve)
-                {
-                    el = null;
-                }
-            }
-            return (Grid)el;
-        }
-        private void DeplacerFrontiereVerticale(Button btn, bool vers_la_gauche)
-        {
-            int delta_largeur = vers_la_gauche ? -10 : 10;
-            Grid gr = MaGridGrandMere(btn);
-            if (gr != null)
-            {
-                string[] tab_num = btn.ClassId.Split(',');
-                int num_col_btn = Convert.ToInt32(tab_num[0]);
-                int num_champ_btn = Convert.ToInt32(tab_num[1]);
-                int largeur_colonne = 0;
-                if (gr.ClassId == "dgcriteres_recherche")
-                {
-                    if (p is AZEcranComplexe)
-                    {
-                        AZEcranComplexe ecr = (AZEcranComplexe)p;
-                        ecr.lc_criteres[num_champ_btn].lg_champ_ecran += delta_largeur;
-                    }
-                }
-                lc[num_champ_btn].lg_champ_ecran += delta_largeur;
-                largeur_colonne = lc[num_champ_btn].lg_champ_ecran;
-                gr.ColumnDefinitions[num_col_btn].Width = new GridLength((double)largeur_colonne);
-                gr.IsVisible = false;
-                dg.IsVisible = false;
-                dg.ItemsSource = null;
-                / *
-                if (gr.ClassId == "dgcriteres_recherche")
-                {
-                    dg.ItemTemplate = new DataTemplate(CreerItemTemplateCriteres);
-                }
-                else
-                {
-                    dg.ItemTemplate = new DataTemplate(CreerItemTemplateOnglet);
-                }
-                * /
-                if (dt != null)
-                    dg.ItemsSource = dt.Rows;
-                gr.IsVisible = true;
-                dg.IsVisible = true;
-                if (gr.ClassId == "dgcriteres_recherche" && p is AZEcranRecherche)
-                {
-                    AZEcranRecherche ecr = (AZEcranRecherche)p;
-                    ecr.dg_criteres.IsVisible = false;
-                    ecr.dg_criteres.ItemsSource = null;
-                    //                    dgr.ItemTemplate = new DataTemplate(CreerItemTemplateRecherche);
-                    if (ecr.dt_criteres != null)
-                        ecr.dg_criteres.ItemsSource = ecr.dt_criteres.Rows;
-                    ecr.dg_criteres.IsVisible = true;
-                }
-            }
-        }
-        */
         public void DeplacerFrontiereVerticale(string classid, int delta_largeur, bool maj)
         {
             AZGrid gr = (AZGrid)sv.Content;
@@ -947,16 +781,6 @@ namespace Controles
                     gr.IsVisible = false;
                     dg.IsVisible = false;
                     dg.ItemsSource = null;
-                    /*
-                    if (gr.ClassId == "dgcriteres_recherche")
-                    {
-                        dg.ItemTemplate = new DataTemplate(CreerItemTemplateCriteres);
-                    }
-                    else
-                    {
-                        dg.ItemTemplate = new DataTemplate(CreerItemTemplateOnglet);
-                    }
-                    */
                     if (dt != null)
                         dg.ItemsSource = dt.Rows;
                     gr.IsVisible = true;
@@ -1065,7 +889,8 @@ namespace Controles
                                 case AZTypeDeChamp.Double:
                                 case AZTypeDeChamp.Entier:
                                 case AZTypeDeChamp.Texte:
-                                    AZEntry en = new AZEntry();
+                                    //                                    AZEntry en = new AZEntry();
+                                    Editor en = new Editor();
                                     Grid.SetColumn(en, 1);
                                     Grid.SetRow(en, num_lig);
                                     en.ClassId = c.NomChampBD();
@@ -1134,20 +959,6 @@ namespace Controles
                         if (c.visible)
                         {
                             //                            string classid_des_btn = num_col.ToString();
-                            /*
-                            if (0 == 1)    // GridSplitter
-                            {
-                                grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(largeur_grid_splitter, GridUnitType.Absolute) });
-                                AZGridSplitter gs = new AZGridSplitter();
-                                gs.HorizontalOptions = LayoutOptions.Center;
-                                gs.ClassId = num_col.ToString();
-                                gs.BackgroundColor = Color.Azure;
-                                Grid.SetColumn(gs, num_col);
-                                Grid.SetRow(gs, 1);
-                                grg.Children.Add(gs);
-                                num_col++;
-                            }
-                            */
                             grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = grg.DonnerGridLength(c.lg_champ_ecran, AZGridUnitType.Absolute) });
                             AZLabel lbl = new AZLabel();
                             Grid.SetColumn(lbl, num_col);
@@ -1178,20 +989,6 @@ namespace Controles
                             }
                             else
                             {
-                                /*
-                                grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(m_largeur_grid_splitter, GridUnitType.Absolute) });
-                                Button btnmoins = new Button() { BackgroundColor = Color.Olive };
-                                btnmoins.ClassId = (num_col).ToString() + "," + i.ToString();
-                                Grid.SetColumn(btnmoins, ++num_col);
-                                Grid.SetRow(btnmoins, 1);
-                                grg.Children.Add(btnmoins);
-                                grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(m_largeur_grid_splitter, GridUnitType.Absolute) });
-                                Button btnplus = new Button() { BackgroundColor = Color.Red };
-                                btnplus.ClassId = (num_col).ToString() + "," + i.ToString();
-                                Grid.SetColumn(btnplus, ++num_col);
-                                Grid.SetRow(btnplus, 1);
-                                grg.Children.Add(btnplus);
-                                */
                                 grg.ColumnDefinitions.Add(new ColumnDefinition() { Width = grg.DonnerGridLength(m_largeur_separation_colonnes * 2, AZGridUnitType.Absolute) });
                                 AZGrid grbtn = CreerGrilleRedimensionnement(num_col++, i);
                                 Grid.SetColumn(grbtn, num_col);
@@ -1242,26 +1039,6 @@ namespace Controles
                     break;
             }
         }
-        /*
-        private void m_dg_ItemTapped(object sender, ItemTappedEventArgs e)
-        {
-            //            throw new NotImplementedException();
-            DataRow dr = e.Item as DataRow;
-            string nom_tab = dr.Table.TableName;
-            if (nom_tab != "recherche" && nom_tab != "criteres")
-                ((ListView)sender).SelectedItem = null; // de-select the row
-        }
-        private void m_dg_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            DataRow dr = e.SelectedItem as DataRow;
-            string nom_tab = dr.Table.TableName;
-            if (nom_tab != "recherche" && nom_tab != "criteres")
-            {
-                int idx = e.SelectedItemIndex;
-            }
-            //            throw new NotImplementedException();
-        }
-        */
         private void Activation_tri_Tapped(object sender, EventArgs e)
         {
             try
@@ -1463,9 +1240,12 @@ namespace Controles
         {
             try
             {
-                AZEntry en = (AZEntry)sender;
-                string nom_champ = en.ClassId;
-                ModifEntry(nom_champ, sender);
+                if (sender is AZEntry)
+                {
+                    AZEntry en = (AZEntry)sender;
+                    string nom_champ = en.ClassId;
+                    ModifEntry(nom_champ, sender);
+                }
             }
             catch (Exception ex)
             {
@@ -1514,18 +1294,12 @@ namespace Controles
                 AfficherException(ex);
             }
         }
-        /*
-        public virtual string PreparerSqlPourComboboxDetail(DataRow dr, string nom_grille, string nom_champ)
-        {
-            return "";
-        }
-        */
-        public virtual string PreparerSqlPourComboboxDetail(AZComboCS cbo, AZGrid gr_ligne)
+        public virtual string PreparerSqlPourComboboxDetail(AZComboCS cbo)
         {
             string sql = "";
             if(m_p is AZEcranComplexe)
             {
-                sql = ((AZEcranComplexe)m_p).PreparerSqlPourComboboxDetail(cbo, gr_ligne);
+                sql = ((AZEcranComplexe)m_p).PreparerSqlPourComboboxDetail(cbo);
             }
             return sql;
         }

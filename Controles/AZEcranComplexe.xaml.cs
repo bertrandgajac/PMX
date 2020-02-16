@@ -267,7 +267,8 @@ namespace Controles
                                     break;
                                 case AZTypeDeChamp.Texte:
                                     if (!c.NomChampBD().EndsWith("WITH"))
-                                        ((AZEntry)c.champ_saisie).Text = dronglet[c.NomChampBD()].ToString();
+//                                        ((AZEntry)c.champ_saisie).Text = dronglet[c.NomChampBD()].ToString();
+                                        ((Editor)c.champ_saisie).Text = dronglet[c.NomChampBD()].ToString();
                                     break;
                                 default:
                                     await AfficherMessage("type de champ inconnu dans l'onglet " + o.bd.header);
@@ -681,7 +682,7 @@ namespace Controles
             return "";
         }
         */
-        public virtual string PreparerSqlPourComboboxDetail(AZComboCS cbo, AZGrid g)
+        public virtual string PreparerSqlPourComboboxDetail(AZComboCS cbo)
         {
             return "";
         }

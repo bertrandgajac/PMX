@@ -28,9 +28,10 @@ namespace PMX
             Init(nom_serveur, nom_bd, mode_generation, nom_ecran, lst_nom_tab, proc_avec_user, nom_champ_etat, lg_min_champ_ecran, lg_max_champ_ecran, taille_textes);
             //        MainPage = new NavigationPage(new Controles.AZEcranComplexe(nom_serveur,nom_bd,mode_generation,lst_nom_tab,sql_recherche,proc_avec_user,nom_champ_etat,lg_min_champ_ecran,lg_max_champ_ecran));
         }
-        public override string PreparerSqlPourComboboxDetail(AZComboCS cbo, AZGrid g)
+        public override string PreparerSqlPourComboboxDetail(AZComboCS cbo)
         {
             string sql = "";
+            AZGrid g = (AZGrid)cbo.Parent;
             AZChamp champ = cbo.champ;
             string nom_onglet = champ.bloc_donnees.nom_table_bloc;
             switch(nom_onglet)

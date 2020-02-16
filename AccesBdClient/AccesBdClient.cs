@@ -62,7 +62,7 @@ namespace AccesBdClient
         }
     }
     */
-    enum TYPE_ACCES_SERVICE_WEB { attendre = 0, definir_serveur_ou_bd = 1, valider_utilisateur = 2, lire_ensemble_de_tables = 3, ecrire_table = 4, lire_blob = 5, ecrire_blob=6, exec_sql=7 }
+    enum TYPE_ACCES_SERVICE_WEB { attendre = 0, definir_serveur_ou_bd = 1, valider_utilisateur = 2, lire_ensemble_de_tables = 3, ecrire_table = 4, lire_blob = 5, ecrire_blob=6, exec_sql=7, lire_une_valeur=8 }
 
     public class AccesBdClient
     {
@@ -73,9 +73,9 @@ namespace AccesBdClient
         //        private string prefixe_url = "http://localhost:80/";
         //private string prefixe_url = "https://localhost:44338/";
         // private string prefixe_url = "https://0.0.0.0:44338/";
-                private string prefixe_url = "http://bertrandgajac.hopto.org:9003/";
+                private string prefixe_url = "http://bertrandgajac.hopto.org:9003/AccesBdPm/";
         //        private string prefixe_url = "http://86.71.67.98:92/";
-        private bool php = false;
+        private bool php = true;
         private const string separateur = "§";
         private const string serveur = "bertrand-pc\\bd_mssql";
         private const string bd = "gestion_pm";
@@ -112,6 +112,9 @@ namespace AccesBdClient
                     break;
                 case TYPE_ACCES_SERVICE_WEB.exec_sql:
                     nom_php = "ExecSql.php";
+                    break;
+                case TYPE_ACCES_SERVICE_WEB.lire_une_valeur:
+                    nom_php = "LireUneValeur.php?sql=" + sql;
                     break;
             }
             return nom_php;
@@ -167,13 +170,14 @@ namespace AccesBdClient
             client.BaseAddress = new Uri(prefixe_url);
             client.MaxResponseContentBufferSize = 2000000000;
             string request = php ? NomRequetePhp(tasw, sql, donnees) : "api/accesbd";
+//            request = "AccesBdPm/accesbd.php";
             string serveur_bd = "(" + serveur + "/" + bd + ")";
             // 20190414            string contenu = JsonConvert.SerializeObject(php ? "" : serveur_bd + ContenuCSharp(tasw, sql, donnees));
             //string contenu = JsonConvert.SerializeObject(php ? "" : serveur_bd + ContenuCSharp(tasw, sql, donnees));
             TraducJson tj = new TraducJson();
             string contenu_initial = php ? "" : serveur_bd + ContenuCSharp(tasw, sql, donnees);
             string contenu = tj.SerialiserObjet(contenu_initial);
-            HttpRequestMessage msg_val = new HttpRequestMessage(HttpMethod.Post, request);
+            HttpRequestMessage msg_val = new HttpRequestMessage(HttpMethod.Get, request);
             msg_val.Content = new StringContent(contenu);
             msg_val.Content.Headers.ContentType.MediaType = "application/json";
             //            System.Net.ServicePointManager.CertificatePolicy = new TrustAllCertificatePolicy();
@@ -205,6 +209,7 @@ namespace AccesBdClient
 
         public async Task<string> LireUneValeurOuVide(string sql)
         {
+            /*
             string val = "";
             DataTable dt = await LireTable(sql);
             if (dt.Rows.Count == 1)
@@ -219,12 +224,15 @@ namespace AccesBdClient
                     val = val.Substring(0, val.Length - 1);
                 }
             }
+            */
+            string val = await AccesDeBase(TYPE_ACCES_SERVICE_WEB.lire_une_valeur, sql, "");
             return val;
         }
         public async Task<string> LireUneValeur(string sql)
         {
+            /*
             DataTable dt= await LireTable(sql);
-            if(dt.Rows.Count == 0)
+            if(dt == null || dt.Rows == null && dt.Rows.Count == 0)
             {
                 throw new Exception("LireUneValeur(" + sql + "): pas de valeur");
             }
@@ -237,6 +245,8 @@ namespace AccesBdClient
             {
                 val = val.Substring(0, val.Length - 1);
             }
+            */
+            string val = await AccesDeBase(TYPE_ACCES_SERVICE_WEB.lire_une_valeur, sql, "");
             return val;
         }
 
