@@ -71,7 +71,8 @@ namespace Controles
                     }
                 }
             }
-            ch_crypte = System.Text.ASCIIEncoding.UTF8.GetString(tab_ch_crypte).Replace("'", "''");
+            //            ch_crypte = System.Text.ASCIIEncoding.UTF8.GetString(tab_ch_crypte).Replace("'", "''");
+            ch_crypte = Convert.ToBase64String(tab_ch_crypte);
             return ch_crypte;
         }
         protected virtual void MemoriserPrs()

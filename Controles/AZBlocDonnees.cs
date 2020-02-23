@@ -30,6 +30,7 @@ namespace Controles
         private AZListView m_dg;
         //ABCD        private ListView _dgr;
         private bool m_avec_box_view;
+        private Dictionary<string, List<ItemCbo>> m_listes_pour_cbo;
 
         public AZBlocDonnees(AZEcran p, AZOnglet o, AZTypeBlocDonnees type_bloc_donnees, string nom_tab_bloc)
         {
@@ -67,6 +68,7 @@ namespace Controles
         //ABCD        public ListView dgr { get { return _dgr; } set { _dgr = value; } }
         public string NomDataGridPourGrille { get { return "dg" + m_nom_table_bloc; } }
         public bool avec_box_view { get { return m_avec_box_view; } set { m_avec_box_view = value; } }
+        public Dictionary<string, List<ItemCbo>> listes_pour_cbo { get { return m_listes_pour_cbo; } }
 
         protected async void AfficherMessage(string msg)
         {
@@ -108,6 +110,31 @@ namespace Controles
             }
             msg += ex.StackTrace;
             AfficherMessage(msg);
+        }
+        public async Task<bool> InitialiserCbo()
+        {
+            m_listes_pour_cbo = new Dictionary<string, List<ItemCbo>>();
+            AccesBdClient.AccesBdClient ab = new AccesBdClient.AccesBdClient();
+            foreach(AZChamp c in m_lc)
+            {
+                if(c.type==AZTypeDeChamp.Combobox)
+                {
+                    string sql = c.base_req.Replace("@top", "").Replace("@id","id").Replace("@lib","lib");
+                    DataTable dt = await ab.LireTable(sql);
+                    List<ItemCbo> lcbo = new List<ItemCbo>();
+                    foreach(DataRow dr in dt.Rows)
+                    {
+                        int id = Convert.ToInt32(dr[0].ToString());
+                        string lib = dr[1].ToString();
+                        ItemCbo cb = new ItemCbo();
+                        cb.id = id;
+                        cb.lib = lib;
+                        lcbo.Add(cb);
+                    }
+                    m_listes_pour_cbo.Add(c.nom_champ, lcbo);
+                }
+            }
+            return true;
         }
         public async Task<bool> GenererChamps(string sql)
         {
@@ -419,6 +446,8 @@ namespace Controles
                                         base_req = "select @top id_" + nom_tab_ref_pour_cbo + " as @id,dbo.fct_rep('" + nom_tab_ref_pour_cbo + "',id_" + nom_tab_ref_pour_cbo + ") as @lib from " + nom_tab_ref_pour_cbo + " where 1=1 order by 2";
                                         base_filtre_lib = " and dbo.fct_rep('" + nom_tab_ref_pour_cbo + "',id_" + nom_tab_ref_pour_cbo + ")='@valeur'";
                                         base_filtre_id = " and id_" + nom_tab_ref_pour_cbo + "=@valeur";
+//                                        DataTable dt = await ab.LireTable(base_req);
+//                                        m_listes_pour_cbo.Add(nom_tab_ref_pour_cbo, dt);
                                     }
                                 }
                                 bool maj = false;
@@ -737,7 +766,7 @@ namespace Controles
             gr.ColumnSpacing = 0.0;
             AZButton btnmoins = new AZButton();
             btnmoins.Text = "-";
-            btnmoins.BackgroundColor = Color.LightGreen;
+            btnmoins.BackgroundColor = Color.Black;
             string classid = num_col.ToString() + "," + num_champ.ToString();
             btnmoins.ClassId = classid;
             //            btnmoins.HeightRequest = 30;
@@ -747,7 +776,9 @@ namespace Controles
             gr.Children.Add(btnmoins);
             AZButton btnplus = new AZButton();
             btnplus.Text = "+";
-            btnplus.BackgroundColor = Color.LightPink;
+            btnplus.BackgroundColor = Color.White;
+            btnplus.BorderColor = Color.Black;
+            btnplus.BorderWidth = 2.0;
             btnplus.ClassId = classid;
             //            btnplus.HeightRequest = 30;
             //            btnplus.WidthRequest = c.largeur_champ_ecran / 2;

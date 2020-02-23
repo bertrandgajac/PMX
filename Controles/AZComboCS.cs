@@ -46,6 +46,7 @@ namespace Controles
         public double? ancienne_valeur { get; set; }
         public double? nouvelle_valeur { get; set; }
     }
+    /*
     public class AZComboUtil
     {
         private string nom_col_nb_ligs;
@@ -129,16 +130,17 @@ namespace Controles
                 liste_initialisee = true;
                 nb_total_items = nb_total;
             }
-            /*
+            / *
             else
             {
                 AfficherErreur("Aucune valeur disponible");
             }
             Sablier(false);
-            */
+            * /
             return liste;
         }
     }
+    */
     public partial class AZComboCS : AZGrid
     {
         private const string m_nom_col_id = "i";
@@ -174,6 +176,91 @@ namespace Controles
         */
         private double m_largeur_bouton = 30.0;
         //        private int? id;
+        // AZComboUtil! données et méthodes
+        private string nom_col_nb_ligs;
+        private string nom_col_id;
+        private string nom_col_lib;
+        public bool meme_liste;
+        public bool liste_complete;
+        public bool liste_initialisee;
+        public int nb_total_items;
+        public string PreparerReq(string req)
+        {
+            string req_preparee = req;
+            if (req_preparee.Contains("@top"))
+            {
+                req_preparee = req_preparee.Replace("@top", "top 200 count(*) over() as " + m_nom_col_nb_ligs + ",");
+                if (req_preparee.EndsWith("order by 2"))
+                {
+                    req_preparee = req_preparee.Replace("order by 2", "order by 3");
+                }
+            }
+            if (req_preparee.Contains("@id"))
+            {
+                req_preparee = req_preparee.Replace("@id", m_nom_col_id);
+            }
+            if (req_preparee.Contains("@lib"))
+            {
+                req_preparee = req_preparee.Replace("@lib", m_nom_col_lib);
+            }
+            return req_preparee;
+        }
+        private async Task<List<ItemCbo>> InitialiserListe(string req, string filtre_id, string filtre_lib, int? val_filtre_id, string val_filtre_lib)
+        {
+            List<ItemCbo> liste = new List<ItemCbo>();
+            //meme_liste = true;
+            // m_liste_complete = false;
+            //            Sablier(true);
+            meme_liste = false;
+            req = PreparerReq(req);
+            m_liste_complete = true;
+            if (val_filtre_lib != null && val_filtre_lib.Length > 0)
+            {
+                req = req.Replace("1=1", "1=1" + filtre_lib.Replace("@valeur", val_filtre_lib));
+                m_liste_complete = false;
+            }
+            if (val_filtre_id.HasValue)
+            {
+                req = req.Replace("1=1", "1=1" + filtre_id.Replace("@valeur", val_filtre_id.Value.ToString()));
+                m_liste_complete = false;
+            }
+            AccesBdClient.AccesBdClient ab = new AccesBdClient.AccesBdClient();
+            DataTable dt = await ab.LireTable(req);
+            if (dt != null)
+            {
+                int nb_ligs = dt.Rows.Count;
+                int nb_total = nb_ligs;
+                if (nb_ligs > 0)
+                {
+                    if (dt.Columns.Contains(m_nom_col_nb_ligs))
+                    {
+                        nb_total = Convert.ToInt32(dt.Rows[0][m_nom_col_nb_ligs]);
+                    }
+                }
+                if (nb_ligs < nb_total)
+                {
+                    m_liste_complete = false;
+                }
+                foreach (DataRow dr in dt.Rows)
+                {
+                    ItemCbo it = new ItemCbo();
+                    it.id = Convert.ToInt32(dr[m_nom_col_id].ToString());
+                    it.lib = dr[m_nom_col_lib].ToString();
+                    liste.Add(it);
+                }
+                m_liste_initialisee = true;
+                m_nb_total_items = nb_total;
+            }
+            /*
+            else
+            {
+                AfficherErreur("Aucune valeur disponible");
+            }
+            Sablier(false);
+            */
+            return liste;
+        }
+        // fin de AZComboUtil
 
         public static readonly BindableProperty CboLibProperty = BindableProperty.Create(nameof(CboLib), typeof(string), typeof(AZComboCS), default(string), Xamarin.Forms.BindingMode.TwoWay, propertyChanged: OnCboLibChanged);
         public string CboLib
@@ -184,8 +271,8 @@ namespace Controles
             get { return texte.Text; }
             set { this.texte.Text = value; }
             */
-        }
-        public event EventHandler<CboLibChangedEventArgs> CboLibChanged;
+    }
+    public event EventHandler<CboLibChangedEventArgs> CboLibChanged;
 
         public static readonly BindableProperty CboIdProperty = BindableProperty.Create(nameof(CboId), typeof(int?), typeof(AZComboCS), default(int?), Xamarin.Forms.BindingMode.TwoWay, propertyChanged: OnCboIdChanged);
         public int? CboId
@@ -343,13 +430,36 @@ namespace Controles
             }
             if (m_courant_req == req && m_courant_filtre_lib == filtre_lib && m_courant_filtre_id == filtre_id && m_courant_val_filtre_lib == val_filtre_lib && m_courant_val_filtre_id == val_filtre_id)
                 return true;
-            var util = new AZComboUtil(m_nom_col_nb_ligs, m_nom_col_id, m_nom_col_lib);
+            //            var util = new AZComboUtil(m_nom_col_nb_ligs, m_nom_col_id, m_nom_col_lib);
             m_courant_req = req;
             m_courant_filtre_lib = filtre_lib;
             m_courant_filtre_id = filtre_id;
             m_courant_val_filtre_lib = val_filtre_lib;
             m_courant_val_filtre_id = val_filtre_id;
-            m_ItemsSource = await util.InitialiserListe(req, filtre_id, filtre_lib, val_filtre_id, val_filtre_lib);
+            bool trouve = false;
+            if (champ != null)
+            {
+                if (champ.bloc_donnees != null)
+                {
+                    if (champ.bloc_donnees.listes_pour_cbo != null)
+                    {
+                        if (champ.bloc_donnees.listes_pour_cbo.ContainsKey(champ.nom_champ))
+                        {
+                            m_ItemsSource = champ.bloc_donnees.listes_pour_cbo[champ.nom_champ];
+                            foreach(ItemCbo c in m_ItemsSource)
+                            {
+                                if (val_filtre_id != null && val_filtre_id.HasValue)
+                                {
+                                    if (c.id == val_filtre_id.Value)
+                                        trouve = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (!trouve)
+                m_ItemsSource = await InitialiserListe(req, filtre_id, filtre_lib, val_filtre_id, val_filtre_lib);
             if (m_ItemsSource == null)
             {
                 await AfficherErreur("Aucune valeur disponible");
@@ -357,17 +467,19 @@ namespace Controles
                 m_liste_initialisee = false;
                 m_nb_total_items = 0;
             }
+            /*
             else
             {
                 m_liste_complete = util.liste_complete;
                 m_liste_initialisee = util.liste_initialisee;
                 m_nb_total_items = util.nb_total_items;
             }
+            */
             return true;
         }
         private async void ClicageDuBouton(object sender, EventArgs e)
         {
-            var util = new AZComboUtil(m_nom_col_nb_ligs, m_nom_col_id, m_nom_col_lib);
+            //var util = new AZComboUtil(m_nom_col_nb_ligs, m_nom_col_id, m_nom_col_lib);
             Sablier(true);
             try
             {
@@ -523,6 +635,7 @@ namespace Controles
                     // la liste etait deja initialisee mais ne contenait pas le id recherche
                     // peut-etre cette liste etait-elle tronquee
                     // => on le reteste
+                    // on commence par regarder si la cbo appartient a un AZBlocDonnees avec une liste de reference
                     bool liste_complete = await InitialiserListe(nouvel_id, null);
                 }
             }

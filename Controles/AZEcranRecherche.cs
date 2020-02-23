@@ -60,6 +60,7 @@ namespace Controles
         {
             bool ret = await base.Init1();
             m_criteres_recherche = new AZBlocDonnees(this, (AZOnglet)null, AZTypeBlocDonnees.CriteresRecherche, "recherche");
+            await m_criteres_recherche.InitialiserCbo();
             m_lc_criteres = new List<AZChampCritere>();
             AccesBdClient.AccesBdClient ab = new AccesBdClient.AccesBdClient();
             string sql = "select count(*) from AZchamp_crit where id_AZecr=" + Formater(this.m_id_AZecr);

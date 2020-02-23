@@ -259,6 +259,7 @@ namespace Controles
             try
             {
                 AZBlocDonnees bd = new AZBlocDonnees(this, (AZOnglet)null, AZTypeBlocDonnees.Grille, "requete");
+                await bd.InitialiserCbo();
                 /*
                 AccesBdClient.AccesBdClient ab = new AccesBdClient.AccesBdClient();
                 DataTable dt_resultat = await ab.LireTable(sql); // ab.LireEnsembleDeTables(sql);

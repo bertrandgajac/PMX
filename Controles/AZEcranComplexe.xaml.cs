@@ -96,6 +96,7 @@ namespace Controles
                 }
                 o.req_lire = req_lire;
                 o.req_maj = req_maj;
+                await o.bd.InitialiserCbo();
                 m_onglets.Add(o);
                 debut = false;
             }
